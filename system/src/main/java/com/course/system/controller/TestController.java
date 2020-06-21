@@ -1,13 +1,14 @@
 package com.course.system.controller;
 
-import com.course.system.domain.Test;
-import com.course.system.service.TestService;
+import com.course.server.domain.Test;
+import com.course.server.service.TestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.xml.ws.Action;
+import javax.annotation.Resource;
+
 import java.util.List;
 
 /**
