@@ -1,6 +1,5 @@
-package com.course.bussiness.controller.admin;
+package com.course.business.controller.admin;
 
-import com.course.server.domain.Chapter;
 import com.course.server.dto.ChapterDto;
 import com.course.server.service.ChapterService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,13 +9,13 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/admin/chapter")
 public class ChapterController {
     @Autowired
     private ChapterService chapterService;
 
-    @RequestMapping("/chapter")
-    public List<ChapterDto> findall() {
+    @RequestMapping("/list")
+    public List<ChapterDto> list() {
         return chapterService.list();
     }
 }
