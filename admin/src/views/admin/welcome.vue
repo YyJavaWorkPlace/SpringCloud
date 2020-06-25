@@ -6,8 +6,10 @@
 <script>
     export default{
         name:"welcome",
+        // mounted:html加载完成后执行。执行顺序：子组件-父组件
         mounted:function(){
-            this.$parent.activeSidebar("welcome-sidebar");
+            // sidebar激活样式方法一 此方法需要在每一个vue文件中声明
+            // this.$parent.activeSidebar("welcome-sidebar");
         },
         methods:{
 

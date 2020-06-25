@@ -420,7 +420,7 @@
                         <b class="arrow"></b>
                         <ul class="submenu">
                             <li class="active" id="business-chapter-sidebar">
-                                <router-link to="/bussiness/chapter">
+                                <router-link to="/business/chapter">
                                     <i class="menu-icon fa fa-caret-right"></i>
                                     章节管理
                                 </router-link>
@@ -486,8 +486,21 @@
     export default {
         name: "admin",
         mounted: function () {
+            let _this=this;
             $('body').removeClass('login-layout light-login');
             $('body').attr('class', 'no-skin');
+            // sidebar 激活样式方法二
+            _this.activeSidebar(_this.$route.name.replace("/","-")+"-sidebar");
+        },
+        watch:{
+          $route:{
+              handler:function (val,oldVal) {
+                let _this=this;
+                _this.$nextTick(function(){
+                    _this.activeSidebar(_this.$route.name.replace("/","-")+"-sidebar");
+                })
+              }
+          }
         },
         methods: {
             login() {
