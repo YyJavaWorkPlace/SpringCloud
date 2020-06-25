@@ -4,7 +4,7 @@ spring:
 server:
   port: 9002
   servlet:
-    context-path: /bussines
+    context-path: /bussiness
 eureka:
   client:
     service-url:
