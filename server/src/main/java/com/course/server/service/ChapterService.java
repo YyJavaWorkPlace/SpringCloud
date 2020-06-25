@@ -1,7 +1,9 @@
 package com.course.server.service;
 
+import com.course.server.converter.Chapter2ChapterDTOConverter;
 import com.course.server.domain.Chapter;
 import com.course.server.domain.ChapterExample;
+import com.course.server.dto.ChapterDto;
 import com.course.server.mapper.ChapterMapper;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +22,9 @@ public class ChapterService {
      * 查询课程大章列表
      * @return
      */
-    public List<Chapter> list() {
+    public List<ChapterDto> list() {
         ChapterExample chapterExample = new ChapterExample();
-        chapterExample.createCriteria().andIdEqualTo("1");
-        chapterExample.setOrderByClause("id desc");//排序
-        return chapterMapper.selectByExample(chapterExample);
+        List<Chapter> chapterList = chapterMapper.selectByExample(chapterExample);
+        return Chapter2ChapterDTOConverter.convert(chapterList);
     }
 }
