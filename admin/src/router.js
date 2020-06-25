@@ -27,7 +27,7 @@ export default new Router({
                 component: Welcome
             },
                 {
-                    path:'chapter',
+                    path:'bussiness/chapter',
                     component: Chapter
                 },
             ]

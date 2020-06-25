@@ -374,17 +374,17 @@
                 </div><!-- /.sidebar-shortcuts -->
 
                 <ul class="nav nav-list">
-                    <li class="">
-                        <a href="/admin/welcome">
+                    <li class="" id="welcome-sidebar">
+                        <router-link to="/admin/welcome">
                             <i class="menu-icon fa fa-tachometer"></i>
                             <span class="menu-text"> 欢迎 </span>
-                        </a>
+                        </router-link>
                         <b class="arrow"></b>
                     </li>
 
 
                     <!--    系统管理-->
-                    <li class="active open">
+                    <li class="" >
                         <a href="#" class="dropdown-toggle">
                             <i class="menu-icon fa fa-list"></i>
                             <span class="menu-text"> 系统管理 </span>
@@ -406,6 +406,24 @@
                                     权限管理
                                 </a>
 
+                                <b class="arrow"></b>
+                            </li>
+                        </ul>
+                    </li>
+<!--                    业务管理-->
+                    <li class="active open">
+                        <a href="#" class="dropdown-toggle">
+                            <i class="menu-icon fa fa-list"></i>
+                            <span class="menu-text"> 业务管理 </span>
+                            <b class="arrow fa fa-angle-down"></b>
+                        </a>
+                        <b class="arrow"></b>
+                        <ul class="submenu">
+                            <li class="active" id="business-chapter-sidebar">
+                                <router-link to="/admin/bussiness/chapter">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    章节管理
+                                </router-link>
                                 <b class="arrow"></b>
                             </li>
                         </ul>
@@ -474,7 +492,27 @@
         methods: {
             login() {
                 this.$router.push("/admin");
+            },
+            /**
+             * 菜单激活样式 id是当前点击的菜单的id
+             * @param id
+             */
+            activeSidebar:function(id){
+                //兄弟菜单去掉active样式 自身增加active样式
+                //兄弟节点去掉激活样式
+                $("#"+id).siblings().removeClass("active");
+                $("#"+id).siblings().find("li").removeClass("active");
+                $("#"+id).addClass("active");
+
+                //如果有父菜单,父菜单的兄弟菜单去掉open active 父菜单增加open active
+                //let 只是在当前块级作用域有效果
+                let parentLi=$("#"+id).parents("li");
+                if (parentLi){
+                    parentLi.siblings().removeClass("active open");
+                    parentLi.addClass("open active");
+                }
             }
         }
+
     }
 </script>
