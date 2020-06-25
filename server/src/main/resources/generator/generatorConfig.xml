@@ -6,15 +6,15 @@
 <generatorConfiguration>
     <context id="Mysql" targetRuntime="MyBatis3" defaultModelType="flat">
 
-<!--        给表面或列名增加``-->
+        <!--        给表面或列名增加``-->
         <property name="autoDelimitKeywords" value="true"/>
         <property name="beginningDelimiter" value="`"/>
         <property name="endingDelimiter" value="`"/>
 
         <!--覆盖生成XML文件 1.3.7之后的版本才可以使用-->
-        <plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin" />
+        <plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin"/>
         <!-- 生成的实体类添加toString()方法 -->
-        <plugin type="org.mybatis.generator.plugins.ToStringPlugin" />
+        <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>
 
         <!-- 不生成注释 -->
         <commentGenerator>
@@ -38,10 +38,10 @@
         <!-- mapper类的位置 三种生成方式 ANNOTATEDMAPPER MIXEDMAPPER XMLMAPPER -->
         <javaClientGenerator targetProject="src\main\java"
                              targetPackage="com.course.server.mapper"
-                             type="XMLMAPPER" />
+                             type="XMLMAPPER"/>
 
-                <table tableName="test" domainObjectName="Test"/>
-        <!--        <table tableName="chapter" domainObjectName="Chapter"/>-->
+        <!--                <table tableName="test" domainObjectName="Test"/>-->
+                <table tableName="chapter" domainObjectName="Chapter"/>
         <!--        <table tableName="section" domainObjectName="Section"/>-->
         <!--        <table tableName="course" domainObjectName="Course"/>-->
         <!--        <table tableName="course_content" domainObjectName="CourseContent"/>-->
@@ -55,6 +55,6 @@
         <!--        <table tableName="role_user" domainObjectName="RoleUser"/>-->
         <!--        <table tableName="member" domainObjectName="Member"/>-->
         <!--        <table tableName="sms" domainObjectName="Sms"/>-->
-<!--        <table tableName="member_course" domainObjectName="MemberCourse"/>-->
+        <!--        <table tableName="member_course" domainObjectName="MemberCourse"/>-->
     </context>
 </generatorConfiguration>
