@@ -6,6 +6,7 @@ import com.course.server.domain.ChapterExample;
 import com.course.server.dto.ChapterDto;
 import com.course.server.dto.PageDto;
 import com.course.server.mapper.ChapterMapper;
+import com.course.server.util.UuidUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Service;
@@ -33,5 +34,11 @@ public class ChapterService {
         PageInfo<Chapter> pageInfo=new PageInfo<>(chapterList);
         pageDto.setTotal(pageInfo.getTotal());
         pageDto.setList(Chapter2ChapterDTOConverter.convert(chapterList));
+    }
+
+    public void save(ChapterDto chapterDto){
+        chapterDto.setId(UuidUtil.getShortUuid());
+        Chapter chapter=Chapter2ChapterDTOConverter.convert(chapterDto);
+        chapterMapper.insert(chapter);
     }
 }

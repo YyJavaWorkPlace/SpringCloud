@@ -25,4 +25,10 @@ public class Chapter2ChapterDTOConverter {
     public static List<ChapterDto> convert(List<Chapter> chapterList) {
         return chapterList.stream().map(e -> convert(e)).collect(Collectors.toList());
     }
+
+    public static Chapter convert(ChapterDto chapterDto) {
+        Chapter chapter = new Chapter();
+        BeanUtils.copyProperties(chapterDto, chapter);
+        return chapter;
+    }
 }

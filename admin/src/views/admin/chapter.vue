@@ -95,17 +95,17 @@
                         <form>
                             <div class="form-group">
                                 <label>名称</label>
-                                <input type="text" class="form-control" placeholder="名称">
+                                <input v-model="chapter.name" type="text" class="form-control" placeholder="名称">
                             </div>
                             <div class="form-group">
                                 <label>课程编号</label>
-                                <input type="text" class="form-control" placeholder="课程编号">
+                                <input v-model="chapter.courseId" type="text" class="form-control" placeholder="课程编号">
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                        <button type="button" class="btn btn-primary">保存</button>
+                        <button v-on:click="save()" type="button" class="btn btn-primary">保存</button>
                     </div>
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
@@ -119,6 +119,7 @@
         components: {Pagination},
         data:function(){
             return {
+                chapter:{},
                 chapters:[]
             }
         },
@@ -140,7 +141,14 @@
             add(){
                 //let _this=this;
                 $(".modal").modal("show");
-            }
+            },
+            save(){
+                let _this=this;
+                _this.$ajax.post('http://127.0.0.1:9000/business/admin/chapter/save',_this.chapter
+                ).then((response)=>{
+                    console.log(response);
+                })
+            },
         }
     }
 </script>
