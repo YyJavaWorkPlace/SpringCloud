@@ -5,6 +5,11 @@
                 <i class="ace-icon fa fa-refresh  bigger-110 icon-only"></i>
                 刷新
             </button>
+            &nbsp;
+            <button @click="add()"  class="btn btn-warning btn-xs">
+                <i class="ace-icon fa fa-edit bigger-110 icon-only"></i>
+                新增
+            </button>
         </p>
         <pagination ref="pagination" v-bind:list="list"></pagination>
         <table id="simple-table" class="table  table-bordered table-hover">
@@ -79,6 +84,32 @@
             </tr>
             </tbody>
         </table>
+        <div class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">新增课程章节</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label>名称</label>
+                                <input type="text" class="form-control" placeholder="名称">
+                            </div>
+                            <div class="form-group">
+                                <label>课程编号</label>
+                                <input type="text" class="form-control" placeholder="课程编号">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary">保存</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
     </div>
 </template>
 <script>
@@ -105,6 +136,10 @@
                     _this.chapters=response.data.list;
                     _this.$refs.pagination.render(page,response.data.total);
                 })
+            },
+            add(){
+                //let _this=this;
+                $(".modal").modal("show");
             }
         }
     }
