@@ -84,14 +84,14 @@
             </tr>
             </tbody>
         </table>
-        <div class="modal fade" tabindex="-1" role="dialog">
+        <div id="form-model" class="modal fade" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title">新增课程章节</h4>
                     </div>
-                    <div class="modal-body">
+                    <div  class="modal-body">
                         <form>
                             <div class="form-group">
                                 <label>名称</label>
@@ -134,19 +134,24 @@
                     page:page,
                     size:_this.$refs.pagination.size,
                 }).then((response)=>{
-                    _this.chapters=response.data.list;
-                    _this.$refs.pagination.render(page,response.data.total);
+                    let resp=response.data;
+                    _this.chapters=resp.content.list;
+                    _this.$refs.pagination.render(page,resp.content.total);
                 })
             },
             add(){
                 //let _this=this;
-                $(".modal").modal("show");
+                $("#form-model").modal("show");
             },
             save(){
                 let _this=this;
                 _this.$ajax.post('http://127.0.0.1:9000/business/admin/chapter/save',_this.chapter
                 ).then((response)=>{
-                    console.log(response);
+                    let resp=response.data;
+                    if (resp.success){
+                        $("#form-model").modal("hide");
+                        _this.list(1)
+                    }
                 })
             },
         }
