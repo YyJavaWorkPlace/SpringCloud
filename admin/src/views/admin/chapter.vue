@@ -10,12 +10,12 @@
         </thead>
 
         <tbody>
-        <tr v-for="chapter in chapters" :key="chapter">
+        <tr v-for="chapData in chapters" :key="chapData.id">
             <td>
-               {{chapter.id}}
+               {{chapData.id}}
             </td>
-            <td>{{chapter.courseId}}</td>
-            <td>{{chapter.name}}</td>
+            <td>{{chapData.courseId}}</td>
+            <td>{{chapData.name}}</td>
             <td>
                 <div class="hidden-sm hidden-xs btn-group">
                     <button class="btn btn-xs btn-success">
@@ -87,7 +87,7 @@
         methods:{
             list(){
                 let _this=this;
-                _this.$ajax.get('http://127.0.0.1:9002/business/admin/chapter/list').then((response)=>{
+                _this.$ajax.get('http://127.0.0.1:9000/business/admin/chapter/list').then((response)=>{
                     _this.chapters=response.data;
                 })
             }
