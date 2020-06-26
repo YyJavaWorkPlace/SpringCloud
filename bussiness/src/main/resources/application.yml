@@ -1,6 +1,6 @@
 spring:
   application:
-    name: bussiness
+    name: business
 server:
   port: 9002
   servlet:
