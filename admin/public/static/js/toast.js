@@ -18,7 +18,7 @@ Toast = {
         });
     },
     warning:function(message){
-        Toast.fire({
+        Swal.fire({
             icon: 'warning',
             title: message,
             position:'top-end',
