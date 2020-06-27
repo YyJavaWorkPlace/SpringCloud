@@ -34,7 +34,7 @@
                         <button v-on:click="edit(chapData)" class="btn btn-xs btn-info">
                             <i class="ace-icon fa fa-pencil bigger-120"></i>
                         </button>
-                        <button class="btn btn-xs btn-danger">
+                        <button v-on:click="del(chapData.id)" class="btn btn-xs btn-danger">
                             <i class="ace-icon fa fa-trash-o bigger-120"></i>
                         </button>
                     </div>
@@ -119,6 +119,15 @@
                     }
                 })
             },
+            del(id){
+                let _this=this;
+                _this.$ajax.delete('http://127.0.0.1:9000/business/admin/chapter/delete/'+id).then((response)=>{
+                    let resp=response.data;
+                    if (resp.success){
+                        _this.list(1)
+                    }
+                })
+            }
         }
     }
 </script>
