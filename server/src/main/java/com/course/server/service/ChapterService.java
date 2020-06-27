@@ -10,6 +10,7 @@ import com.course.server.util.UuidUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -24,6 +25,7 @@ public class ChapterService {
 
     /**
      * 查询课程大章列表
+     *
      * @return
      */
     public void list(PageDto pageDto) {
@@ -31,14 +33,26 @@ public class ChapterService {
         PageHelper.startPage(pageDto.getPage(), pageDto.getSize());
         ChapterExample chapterExample = new ChapterExample();
         List<Chapter> chapterList = chapterMapper.selectByExample(chapterExample);
-        PageInfo<Chapter> pageInfo=new PageInfo<>(chapterList);
+        PageInfo<Chapter> pageInfo = new PageInfo<>(chapterList);
         pageDto.setTotal(pageInfo.getTotal());
         pageDto.setList(Chapter2ChapterDTOConverter.convert(chapterList));
     }
 
-    public void save(ChapterDto chapterDto){
-        chapterDto.setId(UuidUtil.getShortUuid());
-        Chapter chapter=Chapter2ChapterDTOConverter.convert(chapterDto);
+    public void save(ChapterDto chapterDto) {
+        Chapter chapter = Chapter2ChapterDTOConverter.convert(chapterDto);
+        if (StringUtils.isEmpty(chapterDto.getId())) {
+            this.insert(chapter);
+        } else {
+            this.update(chapter);
+        }
+    }
+
+    private void insert(Chapter chapter) {
+        chapter.setId(UuidUtil.getShortUuid());
         chapterMapper.insert(chapter);
+    }
+
+    private void update(Chapter chapter) {
+        chapterMapper.updateByPrimaryKey(chapter);
     }
 }
