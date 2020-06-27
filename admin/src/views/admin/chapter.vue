@@ -1,12 +1,12 @@
 <template>
     <div>
         <p>
-            <button @click="list()"  class="btn btn-warning btn-xs">
+            <button @click="list()" class="btn btn-warning btn-xs">
                 <i class="ace-icon fa fa-refresh  bigger-110 icon-only"></i>
                 刷新
             </button>
             &nbsp;
-            <button @click="add()"  class="btn btn-warning btn-xs">
+            <button @click="add()" class="btn btn-warning btn-xs">
                 <i class="ace-icon fa fa-edit bigger-110 icon-only"></i>
                 新增
             </button>
@@ -46,10 +46,11 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title">新增课程章节</h4>
                     </div>
-                    <div  class="modal-body">
+                    <div class="modal-body">
                         <form>
                             <div class="form-group">
                                 <label>名称</label>
@@ -72,50 +73,52 @@
 </template>
 <script>
     import Pagination from "../../components/pagination";
-    export default{
-        name:"chapter",
+
+    export default {
+        name: "chapter",
         components: {Pagination},
-        data:function(){
+        data: function () {
             return {
-                chapter:{},
-                chapters:[]
+                chapter: {},
+                chapters: []
             }
         },
-        mounted:function() {
-            let _this=this;
+        mounted: function () {
+            let _this = this;
             _this.list(1);
         },
-        methods:{
-            list(page){
-                let _this=this;
-                _this.$ajax.post('http://127.0.0.1:9000/business/admin/chapter/list',{
-                    page:page,
-                    size:_this.$refs.pagination.size,
-                }).then((response)=>{
-                    let resp=response.data;
-                    _this.chapters=resp.content.list;
-                    _this.$refs.pagination.render(page,resp.content.total);
+        methods: {
+            list(page) {
+                let _this = this;
+                _this.$ajax.post('http://127.0.0.1:9000/business/admin/chapter/list', {
+                    page: page,
+                    size: _this.$refs.pagination.size,
+                }).then((response) => {
+                    let resp = response.data;
+                    _this.chapters = resp.content.list;
+                    _this.$refs.pagination.render(page, resp.content.total);
                 })
             },
-            add(){
-                let _this=this;
-                _this.chapter={};
+            add() {
+                let _this = this;
+                _this.chapter = {};
                 $("#form-model").modal("show");
             },
-            edit(chapter){
-                let _this=this;
+            edit(chapter) {
+                let _this = this;
                 //修改的内容不会影响到原chapter 所以点击取消后数据不会发生更改
-                _this.chapter=$.extend({},chapter);
+                _this.chapter = $.extend({}, chapter);
                 $("#form-model").modal("show");
             },
-            save(){
-                let _this=this;
-                _this.$ajax.post('http://127.0.0.1:9000/business/admin/chapter/save',_this.chapter
-                ).then((response)=>{
-                    let resp=response.data;
-                    if (resp.success){
+            save() {
+                let _this = this;
+                _this.$ajax.post('http://127.0.0.1:9000/business/admin/chapter/save', _this.chapter
+                ).then((response) => {
+                    let resp = response.data;
+                    if (resp.success) {
                         $("#form-model").modal("hide");
-                        _this.list(1)
+                        _this.list(1);
+                        toast.success("保存成功");
                     }
                 })
             },
@@ -135,10 +138,7 @@
                             let resp=response.data;
                             if (resp.success){
                                 _this.list(1);
-                                Swal.fire(
-                                    '删除成功!',
-                                    'success'
-                                )
+                                toast.error("删除成功");
                             }
                         });
                     }
