@@ -8,7 +8,7 @@
         <encoder>
             <!--            实际项目中可以使用这个 时间详细-->
             <!--            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) %blue(%-50logger{50}:%-4line) %msg%n</Pattern>-->
-            <Pattern>%d{ss.SSS} %highlight(%-5level) %blue(%-30logger{30}:%-4line) %msg%n</Pattern>
+            <Pattern>%d{ss.SSS} %highlight(%-5level) %blue(%-30logger{30}:%-4line) %green(%-8X{UUID}) %msg%n</Pattern>
         </encoder>
     </appender>
 

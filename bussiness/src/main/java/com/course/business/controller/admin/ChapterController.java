@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/admin/chapter")
 public class ChapterController {
     private static final Logger LOG = LoggerFactory.getLogger(ChapterController.class);
+    public static final String BUSINESS_NAME="课程章节";
     @Autowired
     private ChapterService chapterService;
 
