@@ -89,11 +89,14 @@
         },
         methods: {
             list(page) {
+                //等待框
+                Loading.show();
                 let _this = this;
                 _this.$ajax.post('http://127.0.0.1:9000/business/admin/chapter/list', {
                     page: page,
                     size: _this.$refs.pagination.size,
                 }).then((response) => {
+                    Loading.hide();
                     let resp = response.data;
                     _this.chapters = resp.content.list;
                     _this.$refs.pagination.render(page, resp.content.total);
@@ -111,9 +114,11 @@
                 $("#form-model").modal("show");
             },
             save() {
+                Loading.show();
                 let _this = this;
                 _this.$ajax.post('http://127.0.0.1:9000/business/admin/chapter/save', _this.chapter
                 ).then((response) => {
+                    Loading.hide();
                     let resp = response.data;
                     if (resp.success) {
                         $("#form-model").modal("hide");
@@ -134,7 +139,9 @@
                     confirmButtonText: '确认!'
                 }).then((result) => {
                     if (result.value) {
+                        Loading.show();
                         _this.$ajax.delete('http://127.0.0.1:9000/business/admin/chapter/delete/'+id).then((response)=>{
+                            Loading.hide();
                             let resp=response.data;
                             if (resp.success){
                                 _this.list(1);
