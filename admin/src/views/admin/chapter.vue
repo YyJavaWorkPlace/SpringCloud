@@ -78,6 +78,7 @@
         name: "chapter",
         components: {Pagination},
         data: function () {
+            // 不使用return包裹的数据会在项目的全局可见，会造成变量污染；使用return包裹后数据中变量只在当前组件中生效，不会影响其他组件.
             return {
                 chapter: {},
                 chapters: []

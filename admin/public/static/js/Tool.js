@@ -1,6 +1,8 @@
 Tool = {
     /**
      * 空校验 null或""都返回true
+     * parse用于从一个字符串中解析出json对象
+     * stringify用于从一个对象解析出字符串，如
      */
     isEmpty: function (obj) {
         if ((typeof obj == 'string')) {
