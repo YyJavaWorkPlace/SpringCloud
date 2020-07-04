@@ -1,4 +1,4 @@
-package com.course.business.controller.admin;
+package com.course.${module}.controller.admin;
 
 import com.course.server.dto.${Domain}Dto;
 import com.course.server.dto.PageDto;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/admin/${domain}")
 public class ${Domain}Controller {
     private static final Logger LOG = LoggerFactory.getLogger(${Domain}Controller.class);
-    public static final String BUSINESS_NAME="课程章节";
+    public static final String BUSINESS_NAME="${tableNameCn}";
     @Autowired
     private ${Domain}Service ${domain}Service;
 

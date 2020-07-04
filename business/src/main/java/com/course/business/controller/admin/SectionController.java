@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/admin/section")
 public class SectionController {
     private static final Logger LOG = LoggerFactory.getLogger(SectionController.class);
-    public static final String BUSINESS_NAME="课程小节";
+    public static final String BUSINESS_NAME="小节";
     @Autowired
     private SectionService sectionService;
 
