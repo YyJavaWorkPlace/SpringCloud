@@ -15,7 +15,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * Section 小章表业务逻辑
+ * Section 大章表业务逻辑
  */
 @Service
 public class SectionService {
