@@ -1,5 +1,8 @@
 package com.course.server.domain;
 
+/**
+ * 大章表实体类
+ */
 public class Chapter {
     private String id;
 
