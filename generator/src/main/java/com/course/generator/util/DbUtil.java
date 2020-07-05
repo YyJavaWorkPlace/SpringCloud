@@ -36,7 +36,7 @@ public class DbUtil {
         String tableNameCH = "";
         if (rs != null) {
             while (rs.next()) {
-                tableNameCH = rs.getString("table+comment");
+                tableNameCH = rs.getString("table_comment");
                 break;
             }
             rs.close();
