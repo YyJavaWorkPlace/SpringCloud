@@ -16,7 +16,9 @@
             <thead>
             <tr>
                 <#list fieldList as field>
-                    <th>${field.nameCn}</th>
+                    <#if  field.nameHump!="updatedAt">
+                        <th>${field.nameCn}</th>
+                    </#if>
                 </#list>
                 <th>操作</th>
             </tr>
@@ -25,8 +27,11 @@
             <tbody>
             <tr v-for="${domain} in ${domain}s" :key="${domain}.id">
                 <#list fieldList as field>
+                    <#if  field.nameHump!="updatedAt">
                     <td> {{${domain}.${field.nameHump}}}</td>
+                </#if>
                 </#list>
+
                 <td>
                     <div class="hidden-sm hidden-xs btn-group">
                         <button v-on:click="edit(${domain})" class="btn btn-xs btn-info">
@@ -51,10 +56,12 @@
                     <div class="modal-body">
                         <form>
                             <#list fieldList as field>
+                                <#if  field.nameHump!="id"&&field.nameHump!="createAt"&&field.nameHump!="updatedAt">
                                 <div class="form-group">
                                     <label>${field.nameCn}</label>
                                     <input v-model="${domain}.${field.nameHump}" type="text" class="form-control">
                                 </div>
+                                </#if>
                             </#list>
                         </form>
                     </div>
@@ -114,12 +121,14 @@
                 let _this = this;
                 if (1!=1
                 <#list fieldList as field>
+                    <#if  field.nameHump!="id"&&field.nameHump!="createAt"&&field.nameHump!="updateAt"&&field.nameHump!="sort">
                 <#if !field.nullAble>
                     ||!Validator.require(_this.${domain}.${field.nameHump},"${field.nameCn}")
                 </#if>
                 <#if (field.length>0)>
                     ||!Validator.length(_this.${domain}.${field.nameHump},"${field.nameCn}",1,"${field.length}")
                 </#if>
+                    </#if>
                 </#list>
                 ){
                     return;

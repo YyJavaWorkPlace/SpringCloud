@@ -39,7 +39,7 @@ public class ServerGenerator {
         String Domain = tableElement.attributeValue("domainObjectName");
         String tableName= tableElement.attributeValue("tableName");
         String tableNameCn = DbUtil.getTableComment(tableName);
-        String domain=Domain.substring(0,1).toUpperCase().substring(1);
+        String domain=Domain.substring(0,1).toLowerCase()+Domain.substring(1);
         System.out.println("表:"+tableElement.attributeValue("tableName"));
         System.out.println("Domian:"+tableElement.attributeValue("domainObjectName"));
         String module = MODULE;
@@ -52,15 +52,15 @@ public class ServerGenerator {
         map.put("module", module);
         map.put("fieldList", fieldList);
         map.put("typeSet", typeSet);
-//        FreemarkUtil.initConfig("service.ftl");
-//        FreemarkUtil.generator(toServicePath + Domain + "Service.java", map);
+        FreemarkUtil.initConfig("service.ftl");
+        FreemarkUtil.generator(toServicePath + Domain + "Service.java", map);
 
         FreemarkUtil.initConfig("controller.ftl");
         FreemarkUtil.generator(toControllerPath + Domain + "Controller.java", map);
 
-//        //生成dto
-//        FreemarkUtil.initConfig("dto.ftl");
-//        FreemarkUtil.generator(toDtoPath + Domain + "Dto.java", map);
+        //生成dto
+        FreemarkUtil.initConfig("dto.ftl");
+        FreemarkUtil.generator(toDtoPath + Domain + "Dto.java", map);
     }
 
     /**

@@ -13,7 +13,11 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
-
+<#list typeSet as type>
+    <#if type=='Date'>
+        import java.util.Date;
+    </#if>
+</#list>
 /**
  * ${Domain} 大章表业务逻辑
  */
@@ -31,6 +35,12 @@ public class ${Domain}Service {
         //遇到的第一个select语句会进行分页
         PageHelper.startPage(pageDto.getPage(), pageDto.getSize());
         ${Domain}Example ${domain}Example = new ${Domain}Example();
+        <#list fieldList as field>
+            <#if field.nameHump='sort'>
+                ${domain}Example.setOrderByClause("sort asc");
+            </#if>
+        </#list>
+
         List<${Domain}> ${domain}List = ${domain}Mapper.selectByExample(${domain}Example);
         PageInfo<${Domain}> pageInfo = new PageInfo<>(${domain}List);
         pageDto.setTotal(pageInfo.getTotal());
@@ -48,11 +58,25 @@ public class ${Domain}Service {
     }
 
     private void insert(${Domain} ${domain}) {
+    Date now = new Date();
+        <#list  fieldList as field>
+            <#if  field.nameHump=='createAt'>
+                ${domain}.setCreateAt(now);
+            </#if>
+            <#if  field.nameHump=='updatedAt'>
+                ${domain}.setUpdatedAt(now);
+            </#if>
+        </#list>
         ${domain}.setId(UuidUtil.getShortUuid());
         ${domain}Mapper.insert(${domain});
     }
 
     private void update(${Domain} ${domain}) {
+    <#list fieldList as field>
+          <#if  field.nameHump=='updatedAt'>
+              ${domain}.setUpdatedAt(new Date());
+          </#if>
+      </#list>
         ${domain}Mapper.updateByPrimaryKey(${domain});
     }
 

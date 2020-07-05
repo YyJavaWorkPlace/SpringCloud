@@ -15,16 +15,15 @@
         <table id="simple-table" class="table  table-bordered table-hover">
             <thead>
             <tr>
-                                    <th>ID</th>
-                    <th>标题</th>
-                    <th>课程</th>
-                    <th>大章</th>
-                    <th>视频地址</th>
-                    <th>时长</th>
-                    <th>收费</th>
-                    <th>顺序</th>
-                    <th>创建时间</th>
-                    <th>修改时间</th>
+                                        <th>ID</th>
+                        <th>标题</th>
+                        <th>课程</th>
+                        <th>大章</th>
+                        <th>视频地址</th>
+                        <th>时长</th>
+                        <th>收费</th>
+                        <th>顺序</th>
+                        <th>创建时间</th>
                 <th>操作</th>
             </tr>
             </thead>
@@ -40,7 +39,7 @@
                     <td> {{section.charge}}</td>
                     <td> {{section.sort}}</td>
                     <td> {{section.createAt}}</td>
-                    <td> {{section.updatedAt}}</td>
+
                 <td>
                     <div class="hidden-sm hidden-xs btn-group">
                         <button v-on:click="edit(section)" class="btn btn-xs btn-info">
@@ -64,10 +63,6 @@
                     </div>
                     <div class="modal-body">
                         <form>
-                                <div class="form-group">
-                                    <label>ID</label>
-                                    <input v-model="section.id" type="text" class="form-control">
-                                </div>
                                 <div class="form-group">
                                     <label>标题</label>
                                     <input v-model="section.title" type="text" class="form-control">
@@ -95,14 +90,6 @@
                                 <div class="form-group">
                                     <label>顺序</label>
                                     <input v-model="section.sort" type="text" class="form-control">
-                                </div>
-                                <div class="form-group">
-                                    <label>创建时间</label>
-                                    <input v-model="section.createAt" type="text" class="form-control">
-                                </div>
-                                <div class="form-group">
-                                    <label>修改时间</label>
-                                    <input v-model="section.updatedAt" type="text" class="form-control">
                                 </div>
                         </form>
                     </div>

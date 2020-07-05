@@ -13,7 +13,7 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
-
+        import java.util.Date;
 /**
  * Section 大章表业务逻辑
  */
@@ -31,6 +31,8 @@ public class SectionService {
         //遇到的第一个select语句会进行分页
         PageHelper.startPage(pageDto.getPage(), pageDto.getSize());
         SectionExample sectionExample = new SectionExample();
+                sectionExample.setOrderByClause("sort asc");
+
         List<Section> sectionList = sectionMapper.selectByExample(sectionExample);
         PageInfo<Section> pageInfo = new PageInfo<>(sectionList);
         pageDto.setTotal(pageInfo.getTotal());
@@ -48,11 +50,15 @@ public class SectionService {
     }
 
     private void insert(Section section) {
+    Date now = new Date();
+                section.setCreateAt(now);
+                section.setUpdatedAt(now);
         section.setId(UuidUtil.getShortUuid());
         sectionMapper.insert(section);
     }
 
     private void update(Section section) {
+              section.setUpdatedAt(new Date());
         sectionMapper.updateByPrimaryKey(section);
     }
 
