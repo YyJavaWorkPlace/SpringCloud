@@ -124,11 +124,8 @@
         data: function () {
             // 不使用return包裹的数据会在项目的全局可见，会造成变量污染；使用return包裹后数据中变量只在当前组件中生效，不会影响其他组件.
             return {
-            section:
-            {
-            }
-        ,
-            sections: []
+            section:{},
+            sections:[]
         }
         },
         mounted: function () {
@@ -163,6 +160,13 @@
             },
             save() {
                 let _this = this;
+                if (1!=1
+                    ||!Validator.require(_this.section.title,"标题")
+                    ||!Validator.length(_this.section.title,"标题",1,"50")
+                    ||!Validator.length(_this.section.video,"视频地址",1,"200")
+                ){
+                    return;
+                }
                 Loading.show();
                 _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/section/save', _this.section
                 ).then((response) => {
