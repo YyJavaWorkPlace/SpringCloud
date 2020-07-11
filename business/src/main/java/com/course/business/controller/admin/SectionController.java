@@ -16,15 +16,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/admin/section")
 public class SectionController {
     private static final Logger LOG = LoggerFactory.getLogger(SectionController.class);
-    public static final String BUSINESS_NAME="小节";
+    public static final String BUSINESS_NAME = "小节";
     @Autowired
     private SectionService sectionService;
 
     @PostMapping("/list")
     public ResponseDto list(@RequestBody SectionPageDto sectionPageDto) {
         ResponseDto responseDto = new ResponseDto();
-        ValidatorUtil.require(sectionPageDto.getCourseId(),"课程编号");
-        ValidatorUtil.require(sectionPageDto.getChapterId(),"大章编号");
+        ValidatorUtil.require(sectionPageDto.getCourseId(), "课程编号");
+        ValidatorUtil.require(sectionPageDto.getChapterId(), "大章编号");
         sectionService.list(sectionPageDto);
         responseDto.setContent(sectionPageDto);
         return responseDto;
@@ -33,9 +33,9 @@ public class SectionController {
     @PostMapping("/save")
     public ResponseDto save(@RequestBody SectionDto sectionDto) {
         //保存校验
-                ValidatorUtil.require(sectionDto.getTitle(),"标题");
-                ValidatorUtil.length(sectionDto.getTitle(),"标题",1,50);
-                ValidatorUtil.length(sectionDto.getVideo(),"视频地址",1,200);
+        ValidatorUtil.require(sectionDto.getTitle(), "标题");
+        ValidatorUtil.length(sectionDto.getTitle(), "标题", 1, 50);
+        ValidatorUtil.length(sectionDto.getVideo(), "视频地址", 1, 200);
         ResponseDto responseDto = new ResponseDto();
         sectionService.save(sectionDto);
         responseDto.setContent(sectionDto);
