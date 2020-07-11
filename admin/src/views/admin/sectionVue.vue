@@ -1,5 +1,10 @@
 <template>
     <div>
+        <div class="row" style="margin-bottom: 10px;">
+            <div class="col-xs-12 label label-lg label-info arrowed-in arrowed-right">
+                <b>{{course.name}}---{{chapter.name}}</b>
+            </div>
+        </div>
         <p>
             <button @click="list()" class="btn btn-warning btn-xs">
                 <i class="ace-icon fa fa-refresh  bigger-110 icon-only"></i>
@@ -17,8 +22,6 @@
             <tr>
                 <th>ID</th>
                 <th>标题</th>
-                <th>课程</th>
-                <th>大章</th>
                 <th>视频地址</th>
                 <th>时长</th>
                 <th>收费</th>
@@ -32,13 +35,11 @@
             <tr v-for="section in sections" :key="section.id">
                 <td> {{section.id}}</td>
                 <td> {{section.title}}</td>
-                <td> {{section.courseId}}</td>
-                <td> {{section.chapterId}}</td>
                 <td> {{section.video}}</td>
                 <td> {{section.time}}</td>
                 <td> {{SECTION_CHARGE | optionArray(section.charge)}}</td>
                 <td> {{section.sort}}</td>
-                <td> {{section.createAt}}</td>
+                <td> {{section.createdAt}}</td>
 
                 <td>
                     <div class="hidden-sm hidden-xs btn-group">
@@ -69,11 +70,11 @@
                             </div>
                             <div class="form-group">
                                 <label>课程</label>
-                                <input v-model="section.courseId" type="text" class="form-control">
+                                <p class="form-control-static"> {{course.name}}</p>
                             </div>
                             <div class="form-group">
                                 <label>大章</label>
-                                <input v-model="section.chapterId" type="text" class="form-control">
+                                <p class="form-control-static">{{chapter.name}}</p>
                             </div>
                             <div class="form-group">
                                 <label>视频地址</label>
@@ -115,11 +116,20 @@
             return {
                 section: {},
                 sections: [],
-                SECTION_CHARGE:SECTION_CHARGE
+                SECTION_CHARGE:SECTION_CHARGE,
+                chapter:{},
+                course:{},
             }
         },
         mounted: function () {
             let _this = this;
+            let chapter=SessionStorage.get("chapter")||{};
+            let course=SessionStorage.get("course")||{};
+            if (Tool.isEmpty(chapter)||Tool.isEmpty(course)){
+                _this.$router.push("/welcome")
+            }
+            _this.chapter=chapter;
+            _this.course=course;
             _this.list(1);
         },
         methods: {
@@ -130,6 +140,8 @@
                 _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/section/list', {
                     page: page,
                     size: _this.$refs.pagination.size,
+                    chapterId:_this.chapter.id,
+                    courseId:_this.course.id,
                 }).then((response) => {
                     Loading.hide();
                     let resp = response.data;
@@ -157,6 +169,8 @@
                 ) {
                     return;
                 }
+                _this.section.courseId=_this.course.id;
+                _this.section.chapterId=_this.chapter.id;
                 Loading.show();
                 _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/section/save', _this.section
                 ).then((response) => {

@@ -1,8 +1,10 @@
 package com.course.server.service;
+
 import com.course.server.domain.Section;
 import com.course.server.domain.SectionExample;
 import com.course.server.dto.SectionDto;
 import com.course.server.dto.PageDto;
+import com.course.server.dto.SectionPageDto;
 import com.course.server.mapper.SectionMapper;
 import com.course.server.util.CopyUtil;
 import com.course.server.util.UuidUtil;
@@ -13,7 +15,8 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
-        import java.util.Date;
+import java.util.Date;
+
 /**
  * Section 大章表业务逻辑
  */
@@ -27,21 +30,28 @@ public class SectionService {
      *
      * @return
      */
-    public void list(PageDto pageDto) {
+    public void list(SectionPageDto sectionPageDto) {
         //遇到的第一个select语句会进行分页
-        PageHelper.startPage(pageDto.getPage(), pageDto.getSize());
+        PageHelper.startPage(sectionPageDto.getPage(), sectionPageDto.getSize());
         SectionExample sectionExample = new SectionExample();
-                sectionExample.setOrderByClause("sort asc");
+        SectionExample.Criteria criteria = sectionExample.createCriteria();
+        if (!StringUtils.isEmpty(sectionPageDto.getChapterId())){
+            criteria.andChapterIdEqualTo(sectionPageDto.getChapterId());
+        }
+        if (!StringUtils.isEmpty(sectionPageDto.getCourseId())){
+            criteria.andCourseIdEqualTo(sectionPageDto.getCourseId());
+        }
+        sectionExample.setOrderByClause("sort asc");
 
         List<Section> sectionList = sectionMapper.selectByExample(sectionExample);
         PageInfo<Section> pageInfo = new PageInfo<>(sectionList);
-        pageDto.setTotal(pageInfo.getTotal());
+        sectionPageDto.setTotal(pageInfo.getTotal());
         List<SectionDto> sectionDtos = CopyUtil.copyList(sectionList, SectionDto.class);
-        pageDto.setList(sectionDtos);
+        sectionPageDto.setList(sectionDtos);
     }
 
     public void save(SectionDto sectionDto) {
-        Section section = CopyUtil.copy(sectionDto,Section.class);
+        Section section = CopyUtil.copy(sectionDto, Section.class);
         if (StringUtils.isEmpty(sectionDto.getId())) {
             this.insert(section);
         } else {
@@ -50,15 +60,15 @@ public class SectionService {
     }
 
     private void insert(Section section) {
-    Date now = new Date();
-                section.setCreateAt(now);
-                section.setUpdatedAt(now);
+        Date now = new Date();
+        section.setCreatedAt(now);
+        section.setUpdatedAt(now);
         section.setId(UuidUtil.getShortUuid());
         sectionMapper.insert(section);
     }
 
     private void update(Section section) {
-              section.setUpdatedAt(new Date());
+        section.setUpdatedAt(new Date());
         sectionMapper.updateByPrimaryKey(section);
     }
 

@@ -27,7 +27,7 @@
             <tr>
                 <th>序号</th>
                 <th>课程编号</th>
-                <th>课程ID</th>
+                <th>大章名称</th>
                 <th>操作</th>
             </tr>
             </thead>
@@ -41,6 +41,8 @@
                 <td>{{chapData.name}}</td>
                 <td>
                     <div class="hidden-sm hidden-xs btn-group">
+                        <button v-on:click="toSection(chapData)" type="button" class="btn btn-primary btn-primary btn-xs">小节</button>
+
                         <button v-on:click="edit(chapData)" class="btn btn-xs btn-info">
                             <i class="ace-icon fa fa-pencil bigger-120"></i>
                         </button>
@@ -167,6 +169,11 @@
                         }
                     });
                 });
+            },
+            toSection(chapter){
+                let _this=this;
+                SessionStorage.set("chapter",chapter);
+                _this.$router.push("/business/section")
             }
         }
     }

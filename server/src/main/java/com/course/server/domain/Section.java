@@ -2,9 +2,6 @@ package com.course.server.domain;
 
 import java.util.Date;
 
-/**
- * 小章表实体类
- */
 public class Section {
     private String id;
 
@@ -22,7 +19,7 @@ public class Section {
 
     private Integer sort;
 
-    private Date createAt;
+    private Date createdAt;
 
     private Date updatedAt;
 
@@ -90,12 +87,12 @@ public class Section {
         this.sort = sort;
     }
 
-    public Date getCreateAt() {
-        return createAt;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreateAt(Date createAt) {
-        this.createAt = createAt;
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Date getUpdatedAt() {
@@ -120,7 +117,7 @@ public class Section {
         sb.append(", time=").append(time);
         sb.append(", charge=").append(charge);
         sb.append(", sort=").append(sort);
-        sb.append(", createAt=").append(createAt);
+        sb.append(", createdAt=").append(createdAt);
         sb.append(", updatedAt=").append(updatedAt);
         sb.append("]");
         return sb.toString();
