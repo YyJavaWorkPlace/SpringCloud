@@ -24,6 +24,8 @@ import java.util.Date;
 public class SectionService {
     @Resource
     private SectionMapper sectionMapper;
+    @Resource
+    private CourseService courseService;
 
     /**
      * 查询课程大章列表
@@ -57,6 +59,7 @@ public class SectionService {
         } else {
             this.update(section);
         }
+        courseService.updateTime(sectionDto.getCourseId());
     }
 
     private void insert(Section section) {
