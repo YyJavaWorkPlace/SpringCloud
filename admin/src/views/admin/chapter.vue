@@ -1,6 +1,16 @@
 <template>
     <div>
+        <div class="row" style="margin-bottom: 10px;">
+        <div class="col-xs-4 label label-lg label-info arrowed-in arrowed-right">
+            <b>{{course.name}}</b>
+        </div>
+        </div>
         <p>
+            <router-link to="/business/course" class="btn btn-warning btn-xs">
+                <i class="ace-icon fa fa-arrow-left  bigger-110 icon-only"></i>
+                返回课程
+            </router-link>
+            &nbsp;
             <button @click="list()" class="btn btn-warning btn-xs">
                 <i class="ace-icon fa fa-refresh  bigger-110 icon-only"></i>
                 刷新
@@ -81,12 +91,19 @@
             // 不使用return包裹的数据会在项目的全局可见，会造成变量污染；使用return包裹后数据中变量只在当前组件中生效，不会影响其他组件.
             return {
                 chapter: {},
-                chapters: []
+                chapters: [],
+                course:{}
             }
         },
         mounted: function () {
             let _this = this;
+            let course = SessionStorage.get("course")||{};
+            if (Tool.isEmpty(course)){
+                _this.$route.push("/welcome");
+            }
+            _this.course=course;
             _this.list(1);
+
         },
         methods: {
             list(page) {

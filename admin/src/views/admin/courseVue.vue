@@ -23,7 +23,8 @@
                                <span class="pull-right label label-warning info-label">
                                 {{COURSE_CHARGE|optionArray(course.charge)}}
                             </span>
-                              <span class="pull-right label label-danger info-label" style="float: left; position:absolute">
+                            <span class="pull-right label label-danger info-label"
+                                  style="float: left; position:absolute">
                                 {{COURSE_LEVEL|optionArray(course.level)}}
                             </span>
                             <span class="pull-right label label-info info-label">
@@ -44,8 +45,13 @@
                             <span class="label label-yellow  arrowed">时长:{{course.time}}</span>
                         </p>
                         <p>
-                            <button v-on:click="edit(course)" type="button" class="btn btn-white btn-pink btn-sm">编辑</button>
-                            <button v-on:click="del(course.id)" type="button" class="btn btn-white btn-pink btn-sm">删除</button>
+                            <button v-on:click="toChapter(course)" type="button" class="btn btn-white btn-pink btn-sm">
+                                大章
+                            </button>
+                            <button v-on:click="edit(course)" type="button" class="btn btn-white btn-pink btn-sm">编辑
+                            </button>
+                            <button v-on:click="del(course.id)" type="button" class="btn btn-white btn-pink btn-sm">删除
+                            </button>
                         </p>
                     </div>
                 </div>
@@ -261,15 +267,22 @@
                         }
                     });
                 });
+            },
+            // 组件(页面)间传输数据可以用h5原生localStorage sessionStorage 也可以用js全局变量 vuex store 最后两者刷新后会丢失
+            toChapter(course) {
+                let _this = this;
+                SessionStorage.set("course", course);
+                _this.$router.push("/business/chapter");
             }
         }
     }
 </script>
 <style scoped>
-    .search-title a{
+    .search-title a {
         font-size: 17px;
         font-weight: bold;
     }
+
     /*.labelGroup span{*/
     /*    margin-left: 10px;*/
     /*}*/
