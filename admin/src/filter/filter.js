@@ -7,7 +7,6 @@
  * 传入数组 和 key 最后返回
  */
 let optionKV=(object,key)=>{
-    console.log(object);
   if (!object||!key){
         return "";
   } else{
