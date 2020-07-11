@@ -3,6 +3,7 @@ package com.course.server.service;
 import com.course.server.domain.Chapter;
 import com.course.server.domain.ChapterExample;
 import com.course.server.dto.ChapterDto;
+import com.course.server.dto.ChapterPageDto;
 import com.course.server.dto.PageDto;
 import com.course.server.mapper.ChapterMapper;
 import com.course.server.util.CopyUtil;
@@ -17,6 +18,7 @@ import java.util.List;
 
 /**
  * Chapter 大章表业务逻辑
+ * @author yk
  */
 @Service
 public class ChapterService {
@@ -28,15 +30,20 @@ public class ChapterService {
      *
      * @return
      */
-    public void list(PageDto pageDto) {
-        //遇到的第一个select语句会进行分页
-        PageHelper.startPage(pageDto.getPage(), pageDto.getSize());
+    public void list(ChapterPageDto chapterPageDto) {
+        // 遇到的第一个select语句会进行分页
+        PageHelper.startPage(chapterPageDto.getPage(), chapterPageDto.getSize());
         ChapterExample chapterExample = new ChapterExample();
+        // 只有一次创建 才能反复添加条件
+        ChapterExample.Criteria criteria = chapterExample.createCriteria();
+        if (!StringUtils.isEmpty(chapterPageDto.getCourseId())){
+            criteria.andCourseIdEqualTo(chapterPageDto.getCourseId());
+        }
         List<Chapter> chapterList = chapterMapper.selectByExample(chapterExample);
         PageInfo<Chapter> pageInfo = new PageInfo<>(chapterList);
-        pageDto.setTotal(pageInfo.getTotal());
+        chapterPageDto.setTotal(pageInfo.getTotal());
         List<ChapterDto> chapterDtos = CopyUtil.copyList(chapterList, ChapterDto.class);
-        pageDto.setList(chapterDtos);
+        chapterPageDto.setList(chapterDtos);
     }
 
     public void save(ChapterDto chapterDto) {

@@ -1,5 +1,8 @@
 package com.course.server.dto;
 
+/**
+ * 用于新增Chapter对象
+ */
 public class ChapterDto {
     private String id;
 
