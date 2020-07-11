@@ -405,13 +405,12 @@
                                     <i class="menu-icon fa fa-caret-right"></i>
                                     权限管理
                                 </a>
-
                                 <b class="arrow"></b>
                             </li>
                         </ul>
                     </li>
 <!--                    业务管理-->
-                    <li class="active open">
+                    <li class="active">
                         <a href="#" class="dropdown-toggle">
                             <i class="menu-icon fa fa-list"></i>
                             <span class="menu-text"> 业务管理 </span>
@@ -419,14 +418,21 @@
                         </a>
                         <b class="arrow"></b>
                         <ul class="submenu">
-                            <li class="active" id="business-chapter-sidebar">
+                            <li  id="business-course-sidebar">
+                                <router-link to="/business/course">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    课程管理
+                                </router-link>
+                                <b class="arrow"></b>
+                            </li>
+                            <li  id="business-chapter-sidebar">
                                 <router-link to="/business/chapter">
                                     <i class="menu-icon fa fa-caret-right"></i>
                                     课程大章管理
                                 </router-link>
                                 <b class="arrow"></b>
                             </li>
-                            <li class="active" id="business-section-sidebar">
+                            <li id="business-section-sidebar">
                                 <router-link to="/business/section">
                                     <i class="menu-icon fa fa-caret-right"></i>
                                     课程小节管理
@@ -519,6 +525,7 @@
              * @param id
              */
             activeSidebar:function(id){
+                console.log("打印"+id);
                 //兄弟菜单去掉active样式 自身增加active样式
                 //兄弟节点去掉激活样式
                 $("#"+id).siblings().removeClass("active");

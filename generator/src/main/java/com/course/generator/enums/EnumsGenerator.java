@@ -1,5 +1,8 @@
 package com.course.generator.enums;
 
+import com.course.server.enums.CourseChargeEnum;
+import com.course.server.enums.CourseLevelEnum;
+import com.course.server.enums.CourseStatusEnum;
 import com.course.server.enums.SectionChargeEnum;
 
 import java.io.*;
@@ -68,7 +71,7 @@ public class EnumsGenerator {
      */
     public static void writeJs(StringBuffer sb) {
         File file = new File(path);
-        try (FileOutputStream fileOutputStream = new FileOutputStream(file, true);
+        try (FileOutputStream fileOutputStream = new FileOutputStream(file);
              BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(fileOutputStream));) {
             System.out.println("-----准备写入文件------");
             System.out.println("路径为:" + path);
@@ -135,6 +138,9 @@ public class EnumsGenerator {
         long begin = System.currentTimeMillis();
         try {
             toJson(SectionChargeEnum.class, bufferObject, bufferArray);
+            toJson(CourseLevelEnum.class,bufferObject,bufferArray);
+            toJson(CourseStatusEnum.class,bufferObject,bufferArray);
+            toJson(CourseChargeEnum.class,bufferObject,bufferArray);
             StringBuffer buffer = bufferObject.append("\r\n").append(bufferArray);
             writeJs(buffer);
         } catch (Exception e) {

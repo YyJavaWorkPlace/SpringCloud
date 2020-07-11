@@ -15,6 +15,7 @@
         <table id="simple-table" class="table  table-bordered table-hover">
             <thead>
             <tr>
+                <#-- 取出field中文名称表头-->
                 <#list fieldList as field>
                     <#if  field.nameHump!="updatedAt">
                         <th>${field.nameCn}</th>
@@ -25,13 +26,17 @@
             </thead>
 
             <tbody>
+            <#--            取出对象中的值 例如Course.fileName 过滤更新时间-->
             <tr v-for="${domain} in ${domain}s" :key="${domain}.id">
                 <#list fieldList as field>
                     <#if  field.nameHump!="updatedAt">
-                    <td> {{${domain}.${field.nameHump}}}</td>
-                </#if>
+                        <#if field.enums>
+                            <td>{{${field.enumsConst}|optionArray(${domain}.${field.nameHump})}}</td>
+                        <#else >
+                            <td> {{${domain}.${field.nameHump}}}</td>
+                        </#if>
+                    </#if>
                 </#list>
-
                 <td>
                     <div class="hidden-sm hidden-xs btn-group">
                         <button v-on:click="edit(${domain})" class="btn btn-xs btn-info">
@@ -55,12 +60,25 @@
                     </div>
                     <div class="modal-body">
                         <form>
+                            <#--这里需要判断 如果是枚举类型 需要显示出下拉框-->
                             <#list fieldList as field>
-                                <#if  field.nameHump!="id"&&field.nameHump!="createAt"&&field.nameHump!="updatedAt">
-                                <div class="form-group">
-                                    <label>${field.nameCn}</label>
-                                    <input v-model="${domain}.${field.nameHump}" type="text" class="form-control">
-                                </div>
+                                <#if  field.nameHump!="id"&&field.nameHump!="createdAt"&&field.nameHump!="updatedAt">
+                                    <#if field.enums>
+                                        <div class="form-group">
+                                            <label>${field.nameCn}</label>
+                                            <select v-model="${domain}.${field.nameHump}" class="form-control">
+                                                <option v-for="o in ${field.enumsConst}" :key="o.num"
+                                                        v-bind:value="o.key">{{o.value}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    <#else >
+                                        <div class="form-group">
+                                            <label>${field.nameCn}</label>
+                                            <input v-model="${domain}.${field.nameHump}" type="text"
+                                                   class="form-control">
+                                        </div>
+                                    </#if>
                                 </#if>
                             </#list>
                         </form>
@@ -84,7 +102,12 @@
             // 不使用return包裹的数据会在项目的全局可见，会造成变量污染；使用return包裹后数据中变量只在当前组件中生效，不会影响其他组件.
             return {
             ${domain}:{},
-            ${domain}s:[]
+            ${domain}s:[],
+            <#list fieldList as field>
+            <#if field.enums>
+            ${field.enumsConst}: ${field.enumsConst},
+            </#if>
+            </#list>
         }
         },
         mounted: function () {
@@ -119,18 +142,18 @@
             },
             save() {
                 let _this = this;
-                if (1!=1
-                <#list fieldList as field>
-                    <#if  field.nameHump!="id"&&field.nameHump!="createAt"&&field.nameHump!="updateAt"&&field.nameHump!="sort">
-                <#if !field.nullAble>
-                    ||!Validator.require(_this.${domain}.${field.nameHump},"${field.nameCn}")
-                </#if>
-                <#if (field.length>0)>
-                    ||!Validator.length(_this.${domain}.${field.nameHump},"${field.nameCn}",1,"${field.length}")
-                </#if>
+                if (1 != 1
+                    <#list fieldList as field>
+                    <#if  field.nameHump!="id"&&field.nameHump!="createdAt"&&field.nameHump!="updateAt"&&field.nameHump!="sort">
+                    <#if !field.nullAble>
+                    || !Validator.require(_this.${domain}.${field.nameHump}, "${field.nameCn}")
                     </#if>
-                </#list>
-                ){
+                    <#if (field.length>0)>
+                    || !Validator.length(_this.${domain}.${field.nameHump}, "${field.nameCn}", 1, "${field.length?c}")
+                    </#if>
+                    </#if>
+                    </#list>
+                ) {
                     return;
                 }
                 Loading.show();
