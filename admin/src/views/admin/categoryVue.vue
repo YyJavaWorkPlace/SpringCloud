@@ -168,6 +168,9 @@
                         $("tr.active").trigger("click");},100);
                 })
             },
+            /**
+             * 一级新增
+             */
             add1() {
                 let _this = this;
                 _this.active = {};
@@ -177,6 +180,9 @@
                 };
                 $("#form-model").modal("show");
             },
+            /**
+             * 二级新增
+             */
             add2() {
                 let _this = this;
                 if (Tool.isEmpty(_this.active)){

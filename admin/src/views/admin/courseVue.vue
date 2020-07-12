@@ -115,6 +115,12 @@
                     <div class="modal-body">
                         <form>
                             <div class="form-group">
+                                <label>分类</label>
+                                <div class="col-ms-10">
+                                    <ul id="treeDemo" class="ztree"></ul>
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <label>名称</label>
                                 <input v-model="course.name" type="text"
                                        class="form-control">
@@ -198,12 +204,13 @@
                 COURSE_LEVEL: COURSE_LEVEL,
                 COURSE_CHARGE: COURSE_CHARGE,
                 COURSE_STATUS: COURSE_STATUS,
-
+                category:[]
             }
         },
         mounted: function () {
             let _this = this;
             _this.list(1);
+            _this.allCategory();
         },
         methods: {
             list(page) {
@@ -274,6 +281,62 @@
                 let _this = this;
                 SessionStorage.set("course", course);
                 _this.$router.push("/business/chapter");
+            },
+            allCategory() {
+                //等待框
+                Loading.show();
+                let _this = this;
+                _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/category/all', {}).then((response) => {
+                    Loading.hide();
+                    let resp = response.data;
+                    _this.category = resp.content;
+                    _this.initTree();
+                })
+            },
+            initTree(){
+                let _this=this;
+                let setting = {
+                    check: {
+                        enable: true
+                    },
+                    data: {
+                        simpleData: {
+                            idKey:"id",
+                            pIdKey:"parent",
+                            rootPId:"00000000",
+                            enable: true
+                        }
+                    }
+                };
+
+                var zNodes = _this.category;
+
+                var code;
+
+                function setCheck() {
+                    var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+                        py = $("#py").attr("checked")? "p":"",
+                        sy = $("#sy").attr("checked")? "s":"",
+                        pn = $("#pn").attr("checked")? "p":"",
+                        sn = $("#sn").attr("checked")? "s":"",
+                        type = { "Y":py + sy, "N":pn + sn};
+                    zTree.setting.check.chkboxType = type;
+                    showCode('setting.check.chkboxType = { "Y" : "' + type.Y + '", "N" : "' + type.N + '" };');
+                }
+                function showCode(str) {
+                    if (!code) code = $("#code");
+                    code.empty();
+                    code.append("<li>"+str+"</li>");
+                }
+
+                $(document).ready(function(){
+                    $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+                    setCheck();
+                    $("#py").bind("change", setCheck);
+                    $("#sy").bind("change", setCheck);
+                    $("#pn").bind("change", setCheck);
+                    $("#sn").bind("change", setCheck);
+                });
             }
         }
     }
