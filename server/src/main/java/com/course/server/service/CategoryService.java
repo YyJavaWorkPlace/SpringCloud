@@ -10,6 +10,7 @@ import com.course.server.util.UuidUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
@@ -45,7 +46,7 @@ public class CategoryService {
     /**
      * 列表查询
      */
-    public List<CategoryDto> all(){
+    public List<CategoryDto> all() {
         //遇到的第一个select语句会进行分页
         CategoryExample categoryExample = new CategoryExample();
         categoryExample.setOrderByClause("sort asc");
@@ -73,7 +74,26 @@ public class CategoryService {
         categoryMapper.updateByPrimaryKey(category);
     }
 
+    @Transactional
     public void delete(String id) {
+        deleteChildren(id);
         categoryMapper.deleteByPrimaryKey(id);
+    }
+
+    /**
+     * 删除子分类
+     * 否则产生垃圾数据
+     *
+     * @param id
+     */
+    public void deleteChildren(String id) {
+        Category category = categoryMapper.selectByPrimaryKey(id);
+        if ("00000000".equals(category.getParent())) {
+            //如果是一级分类,需要删除其下的二级分类
+            CategoryExample example = new CategoryExample();
+            CategoryExample.Criteria criteria = example.createCriteria();
+            criteria.andParentEqualTo(category.getId());
+            categoryMapper.deleteByExample(example);
+        }
     }
 }

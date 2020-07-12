@@ -3,12 +3,12 @@
         <div class="row">
             <div class="col-md-6">
                 <p>
-                    <button @click="all()" class="btn btn-warning btn-xs">
+                    <button @click="all1()" class="btn btn-warning btn-xs">
                         <i class="ace-icon fa fa-refresh  bigger-110 icon-only"></i>
                         刷新
                     </button>
                     &nbsp;
-                    <button @click="add()" class="btn btn-warning btn-xs">
+                    <button @click="add1()" class="btn btn-warning btn-xs">
                         <i class="ace-icon fa fa-edit bigger-110 icon-only"></i>
                         新增一级栏目
                     </button>
@@ -27,19 +27,19 @@
                     <tbody>
                     <tr v-for="category in level1" :key="category.id" v-on:click="onClickLevel1(category)"
                         v-bind:class="{'active':category.id===active.id}">
-                    <td> {{category.id}}</td>
-                    <td> {{category.name}}</td>
-                    <td> {{category.sort}}</td>
-                    <td>
-                        <div class="hidden-sm hidden-xs btn-group">
-                            <button v-on:click="edit(category)" class="btn btn-xs btn-info">
-                                <i class="ace-icon fa fa-pencil bigger-120"></i>
-                            </button>
-                            <button v-on:click="del(category.id)" class="btn btn-xs btn-danger">
-                                <i class="ace-icon fa fa-trash-o bigger-120"></i>
-                            </button>
-                        </div>
-                    </td>
+                        <td> {{category.id}}</td>
+                        <td> {{category.name}}</td>
+                        <td> {{category.sort}}</td>
+                        <td>
+                            <div class="hidden-sm hidden-xs btn-group">
+                                <button v-on:click="edit(category)" class="btn btn-xs btn-info">
+                                    <i class="ace-icon fa fa-pencil bigger-120"></i>
+                                </button>
+                                <button v-on:click="del(category.id)" class="btn btn-xs btn-danger">
+                                    <i class="ace-icon fa fa-trash-o bigger-120"></i>
+                                </button>
+                            </div>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -47,9 +47,9 @@
             <div class="col-md-6">
                 <p>
                     &nbsp;
-                    <button @click="add()" class="btn btn-warning btn-xs">
+                    <button @click="add2()" class="btn btn-warning btn-xs">
                         <i class="ace-icon fa fa-edit bigger-110 icon-only"></i>
-                        新增
+                        新增二级栏目
                     </button>
                 </p>
                 <table id="level2-table" class="table  table-bordered table-hover">
@@ -94,9 +94,10 @@
                     <div class="modal-body">
                         <form>
                             <div class="form-group">
-                                <label>父id</label>
+                                <label>父分类</label>
                                 <input v-model="category.parent" type="text"
                                        class="form-control">
+                                <p class="form-control-static">{{active.name||"无"}}</p>
                             </div>
                             <div class="form-group">
                                 <label>名称</label>
@@ -164,9 +165,24 @@
                     }
                 })
             },
-            add() {
+            add1() {
                 let _this = this;
-                _this.category = {};
+                _this.active = {};
+                _this.level2 = [];
+                _this.category = {
+                    parent: "00000000"
+                };
+                $("#form-model").modal("show");
+            },
+            add2() {
+                let _this = this;
+                if (Tool.isEmpty(_this.active)){
+                    Toast.warning("请先点击一级分类");
+                    return;
+                }
+                _this.category = {
+                    parent: _this.active.id
+                };
                 $("#form-model").modal("show");
             },
             edit(category) {
@@ -221,7 +237,7 @@
     }
 </script>
 <style scoped>
-    .active td{
+    .active td {
         background-color: #d3a61a !important;
     }
 </style>
