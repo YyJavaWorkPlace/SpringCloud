@@ -42,6 +42,18 @@ public class CategoryService {
         pageDto.setList(categoryDtos);
     }
 
+    /**
+     * 列表查询
+     */
+    public List<CategoryDto> all(){
+        //遇到的第一个select语句会进行分页
+        CategoryExample categoryExample = new CategoryExample();
+        categoryExample.setOrderByClause("sort asc");
+        List<Category> categoryList = categoryMapper.selectByExample(categoryExample);
+        List<CategoryDto> categoryDtos = CopyUtil.copyList(categoryList, CategoryDto.class);
+        return categoryDtos;
+    }
+
     public void save(CategoryDto categoryDto) {
         Category category = CopyUtil.copy(categoryDto, Category.class);
         if (StringUtils.isEmpty(categoryDto.getId())) {
