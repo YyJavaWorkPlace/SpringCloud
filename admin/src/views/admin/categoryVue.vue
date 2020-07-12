@@ -95,8 +95,6 @@
                         <form>
                             <div class="form-group">
                                 <label>父分类</label>
-                                <input v-model="category.parent" type="text"
-                                       class="form-control">
                                 <p class="form-control-static">{{active.name||"无"}}</p>
                             </div>
                             <div class="form-group">
@@ -163,6 +161,11 @@
                             }
                         }
                     }
+                    _this.level2=[];
+                    //对当前一级分类中选中的表格触发一次点击事件，以刷新二级菜单列表
+                    //注意：界面的渲染需要等vue绑定好变量后才做 所以延时加载100ms
+                    setTimeout(function () {
+                        $("tr.active").trigger("click");},100);
                 })
             },
             add1() {
