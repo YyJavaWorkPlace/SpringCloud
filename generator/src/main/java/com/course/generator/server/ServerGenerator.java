@@ -54,9 +54,9 @@ public class ServerGenerator {
         map.put("typeSet", typeSet);
         FreemarkUtil.initConfig("service.ftl");
         FreemarkUtil.generator(toServicePath + Domain + "Service.java", map);
-
-        FreemarkUtil.initConfig("controller.ftl");
-        FreemarkUtil.generator(toControllerPath + Domain + "Controller.java", map);
+//
+//        FreemarkUtil.initConfig("controller.ftl");
+//        FreemarkUtil.generator(toControllerPath + Domain + "Controller.java", map);
 
         //生成dto
         FreemarkUtil.initConfig("dto.ftl");

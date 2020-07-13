@@ -204,7 +204,8 @@
                 COURSE_LEVEL: COURSE_LEVEL,
                 COURSE_CHARGE: COURSE_CHARGE,
                 COURSE_STATUS: COURSE_STATUS,
-                category:[]
+                category: [],
+                tree: {},
             }
         },
         mounted: function () {
@@ -248,6 +249,13 @@
                 ) {
                     return;
                 }
+
+                let categorys = _this.tree.getCheckedNodes();
+                if (Tool.isEmpty(categorys)) {
+                    Toast.warning("请选择分类!");
+                    return;
+                }
+                _this.course.categorys = categorys;
                 Loading.show();
                 _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/course/save', _this.course
                 ).then((response) => {
@@ -260,7 +268,7 @@
                     } else {
                         Toast.warning(resp.message);
                     }
-                })
+                });
             },
             del(id) {
                 let _this = this;
@@ -293,17 +301,17 @@
                     _this.initTree();
                 })
             },
-            initTree(){
-                let _this=this;
+            initTree() {
+                let _this = this;
                 let setting = {
                     check: {
                         enable: true
                     },
                     data: {
                         simpleData: {
-                            idKey:"id",
-                            pIdKey:"parent",
-                            rootPId:"00000000",
+                            idKey: "id",
+                            pIdKey: "parent",
+                            rootPId: "00000000",
                             enable: true
                         }
                     }
@@ -313,30 +321,7 @@
 
                 var code;
 
-                function setCheck() {
-                    var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
-                        py = $("#py").attr("checked")? "p":"",
-                        sy = $("#sy").attr("checked")? "s":"",
-                        pn = $("#pn").attr("checked")? "p":"",
-                        sn = $("#sn").attr("checked")? "s":"",
-                        type = { "Y":py + sy, "N":pn + sn};
-                    zTree.setting.check.chkboxType = type;
-                    showCode('setting.check.chkboxType = { "Y" : "' + type.Y + '", "N" : "' + type.N + '" };');
-                }
-                function showCode(str) {
-                    if (!code) code = $("#code");
-                    code.empty();
-                    code.append("<li>"+str+"</li>");
-                }
-
-                $(document).ready(function(){
-                    $.fn.zTree.init($("#treeDemo"), setting, zNodes);
-                    setCheck();
-                    $("#py").bind("change", setCheck);
-                    $("#sy").bind("change", setCheck);
-                    $("#pn").bind("change", setCheck);
-                    $("#sn").bind("change", setCheck);
-                });
+                _this.tree = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
             }
         }
     }

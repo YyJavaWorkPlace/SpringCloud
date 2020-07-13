@@ -25,11 +25,13 @@ import java.util.Date;
 @Service
 public class CourseService {
     private static final Logger LOG = LoggerFactory.getLogger(CourseService.class);
-    
+
     @Resource
     private CourseMapper courseMapper;
     @Resource
     private MyChapterMapper mycourseMapper;
+    @Resource
+    private CourseCategoryService courseCategoryService;
 
     /**
      * 查询课程大章列表
@@ -56,6 +58,9 @@ public class CourseService {
         } else {
             this.update(course);
         }
+
+        //批量保存课程分类
+        courseCategoryService.saveBatch(courseDto.getId(),courseDto.getCategorys());
     }
 
     private void insert(Course course) {
@@ -73,8 +78,9 @@ public class CourseService {
     public void delete(String id) {
         courseMapper.deleteByPrimaryKey(id);
     }
-    public void updateTime(String courseId){
-        LOG.info("更新课程时长:{}",courseId);
+
+    public void updateTime(String courseId) {
+        LOG.info("更新课程时长:{}", courseId);
         mycourseMapper.updateTime(courseId);
     }
 }

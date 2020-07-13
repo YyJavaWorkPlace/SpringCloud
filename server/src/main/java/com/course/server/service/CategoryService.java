@@ -2,6 +2,7 @@ package com.course.server.service;
 
 import com.course.server.domain.Category;
 import com.course.server.domain.CategoryExample;
+import com.course.server.domain.CourseCategory;
 import com.course.server.dto.CategoryDto;
 import com.course.server.dto.PageDto;
 import com.course.server.mapper.CategoryMapper;
@@ -96,4 +97,5 @@ public class CategoryService {
             categoryMapper.deleteByExample(example);
         }
     }
+
 }
