@@ -329,7 +329,7 @@
                 // _this.tree.expandAll(true);
             },
 
-            //TODO 待完善 7/13  默认回显已经勾选的分类树
+
             listCategory(courseId) {
                 let _this = this;
                 Loading.show();
