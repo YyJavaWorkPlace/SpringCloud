@@ -231,12 +231,15 @@
             add() {
                 let _this = this;
                 _this.course = {};
+                _this.tree.checkAllNodes(false);
                 $("#form-model").modal("show");
             },
             edit(course) {
                 let _this = this;
                 //修改的内容不会影响到原course 所以点击取消后数据不会发生更改
                 _this.course = $.extend({}, course);
+                //查找应该选中的节点
+                _this.listCategory(course.id);
                 $("#form-model").modal("show");
             },
             save() {
@@ -322,6 +325,28 @@
                 var code;
 
                 _this.tree = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+                //展开所有节点
+                // _this.tree.expandAll(true);
+            },
+
+            //TODO 待完善 7/13  默认回显已经勾选的分类树
+            listCategory(courseId) {
+                let _this = this;
+                Loading.show();
+                _this.$ajax.post(process.env.VUE_APP_SERVER + "/business/admin/course/list-category/" + courseId).then((res) => {
+                    Loading.hide();
+                    console.log("查找课程下所有分类结果", res);
+                    let response = res.data;
+                    let categorys = response.content;
+                    //勾选查询到的分类
+                    _this.tree.checkAllNodes(false);
+                    for (let i = 0; i < categorys.length; i++) {
+                        //根据参数获取节点对象
+                        let node = _this.tree.getNodeByParam("id", categorys[i].categoryId);
+                        //勾选以获取树节点
+                        _this.tree.checkNode(node, true);
+                    }
+                });
             }
         }
     }

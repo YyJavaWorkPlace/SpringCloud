@@ -11,6 +11,7 @@ import com.course.server.util.UuidUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
@@ -63,18 +64,20 @@ public class CourseCategoryService {
     }
 
     /**
+     * 一对多操作时 更新时直接清空再新增
      * 批量插入课程所属栏目
      * 在更新或插入后 都要先删除一次 在添加新的栏目信息
-     *
+     * 根据某一课程 先清空课程分类，在保存课程分类
+     * 防止外层忘记加事务
      * @param courseId
      * @param dtoList
      */
+    @Transactional(rollbackFor = Exception.class)
     public void saveBatch(String courseId, List<CategoryDto> dtoList) {
         //先删除课程所有的分类
         CourseCategoryExample example = new CourseCategoryExample();
         CourseCategoryExample.Criteria criteria = example.createCriteria();
         criteria.andCourseIdEqualTo(courseId);
-
         courseCategoryMapper.deleteByExample(example);
         for (int i = 0; i < dtoList.size(); i++) {
             CategoryDto categoryDto = dtoList.get(i);
@@ -84,4 +87,21 @@ public class CourseCategoryService {
             insert(courseCategory);
         }
     }
+
+    /**
+     *
+     * @param courseId 课程ID
+     * @return 返回课程分类列表
+     */
+    public List<CourseCategoryDto> listByCourse(String courseId){
+        CourseCategoryExample courseCategoryExample = new CourseCategoryExample();
+        CourseCategoryExample.Criteria criteria = courseCategoryExample.createCriteria();
+        criteria.andCourseIdEqualTo(courseId);
+        List<CourseCategory> courseCategories = courseCategoryMapper.selectByExample(courseCategoryExample);
+        return CopyUtil.copyList(courseCategories,CourseCategoryDto.class);
+
+    }
+
+
+
 }
