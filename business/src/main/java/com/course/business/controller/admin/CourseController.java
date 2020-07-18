@@ -1,10 +1,7 @@
 package com.course.business.controller.admin;
 
 import com.course.server.domain.CourseCategory;
-import com.course.server.dto.CourseCategoryDto;
-import com.course.server.dto.CourseDto;
-import com.course.server.dto.PageDto;
-import com.course.server.dto.ResponseDto;
+import com.course.server.dto.*;
 import com.course.server.exception.ValidatorException;
 import com.course.server.service.CourseCategoryService;
 import com.course.server.service.CourseService;
@@ -66,6 +63,33 @@ public class CourseController {
         ResponseDto responseDto = new ResponseDto();
         List<CourseCategoryDto> dtoList = coursecategoryService.listByCourse(courseId);
         responseDto.setContent(dtoList);
+        return responseDto;
+    }
+
+    /**
+     * 查询课程id
+     *
+     * @param courseId
+     * @return
+     */
+    @PostMapping("/find-content/{courseId}")
+    public ResponseDto findContent(@PathVariable("courseId") String courseId) {
+        ResponseDto responseDto = new ResponseDto();
+        CourseContentDto content = courseService.findContent(courseId);
+        responseDto.setContent(content);
+        return responseDto;
+    }
+
+    /**
+     * 保存、更新课程内容
+     *
+     * @param courseContentDto
+     * @return
+     */
+    @PostMapping("/save-content")
+    public ResponseDto saveContent(CourseContentDto courseContentDto) {
+        ResponseDto responseDto = new ResponseDto();
+        courseService.saveContent(courseContentDto);
         return responseDto;
     }
 }

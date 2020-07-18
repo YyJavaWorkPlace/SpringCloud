@@ -50,6 +50,9 @@
                             </button>
                             <button v-on:click="edit(course)" type="button" class="btn btn-white btn-pink btn-sm">编辑
                             </button>
+                            <button v-on:click="editContent(course)" type="button"
+                                    class="btn btn-white btn-pink btn-sm">内容
+                            </button>
                             <button v-on:click="del(course.id)" type="button" class="btn btn-white btn-pink btn-sm">删除
                             </button>
                         </p>
@@ -188,6 +191,31 @@
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
+        <div id="course-content-modal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog"
+             aria-labelledby="myLargeModalLabel">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">课程内容编辑</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <div class="col-lg-12">
+                                    <div id="content"></div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <script>
@@ -347,6 +375,54 @@
                         _this.tree.checkNode(node, true);
                     }
                 });
+            },
+            /**
+             * 打开内容编辑页
+             * @param course
+             */
+            editContent(course) {
+                let _this = this;
+                let id = course.id;
+                $("#content").summernote({
+                    focus: true,
+                    height: 300
+                });
+                //先清空上一次富文本内容
+                $("#content").summernote('code', '');
+                //等待准备Ajax请求
+                Loading.show();
+                _this.$ajax.get(process.env.VUE_APP_SERVER + '/business/admin/course/find-content/' + course.id).then((response) => {
+                    Loading.hide();
+                    let resp = response.data;
+                    if (resp.success) {
+                        //static 表示模态框不会点空白处被关闭
+                        $("#course-content-modal").modal({backdrop: 'static', keyboard: false});
+                        if (resp.content) {
+                            $("#content").summernote('code', resp.content);
+                        }
+                    } else {
+                        Toast.warning(resp.message);
+                    }
+                });
+            },
+            /**
+             * 保存内容
+             */
+            saveContent() {
+                let _this = this;
+                let content = $("#content").summernote("code");
+                _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/course/save-content', {
+                    content: content,
+                    id: _this.course.id,
+                }).then((response) => {
+                    Loading.hide();
+                    let resp = response.data;
+                    if (resp.success) {
+                        Toast.success("内容保存成功");
+                    } else {
+                        Toast.error(resp.message);
+                    }
+                })
             }
         }
     }
