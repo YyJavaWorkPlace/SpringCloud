@@ -81,6 +81,13 @@ public class CourseDto {
      */
     private List<CategoryDto> categorys;
 
+    /**
+     * 老师编号
+     *
+     * @return
+     */
+    private String teacherId;
+
     public String getId() {
         return id;
     }
@@ -193,6 +200,14 @@ public class CourseDto {
         this.categorys = categorys;
     }
 
+    public String getTeacherId() {
+        return teacherId;
+    }
+
+    public void setTeacherId(String teacherId) {
+        this.teacherId = teacherId;
+    }
+
     @Override
     public String toString() {
         return "CourseDto{" +
@@ -210,6 +225,7 @@ public class CourseDto {
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 ", categorys=" + categorys +
+                ", teacherId='" + teacherId + '\'' +
                 '}';
     }
 }

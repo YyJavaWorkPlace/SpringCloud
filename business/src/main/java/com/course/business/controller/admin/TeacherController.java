@@ -1,5 +1,6 @@
 package com.course.business.controller.admin;
 
+import com.course.server.domain.Teacher;
 import com.course.server.dto.TeacherDto;
 import com.course.server.dto.PageDto;
 import com.course.server.dto.ResponseDto;
@@ -10,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/admin/teacher")
@@ -47,6 +50,14 @@ public class TeacherController {
     public ResponseDto delete(@PathVariable String id) {
         ResponseDto responseDto = new ResponseDto();
         teacherService.delete(id);
+        return responseDto;
+    }
+
+    @PostMapping("all")
+    public ResponseDto all() {
+        ResponseDto responseDto = new ResponseDto();
+        List<TeacherDto> all = teacherService.all();
+        responseDto.setContent(all);
         return responseDto;
     }
 }

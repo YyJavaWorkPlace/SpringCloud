@@ -132,6 +132,14 @@
                                        class="form-control">
                             </div>
                             <div class="form-group">
+                                <label>讲师</label>
+                                <select v-model="course.teacherId" class="form-control">
+                                    <option v-for="o in teachers" :key="o.num"
+                                            v-bind:value="o.id">{{o.name}}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="form-group">
                                 <label>概述</label>
                                 <input v-model="course.summary" type="text"
                                        class="form-control">
@@ -283,13 +291,17 @@
                     id: "",
                     oldSort: 0,
                     newSort: 0
-                }
+                },
+                //页面打开加载所有的讲师
+                teachers: [],
             }
         },
         mounted: function () {
             let _this = this;
-            _this.list(1);
+
             _this.allCategory();
+            _this.allTeacher();
+            _this.list(1);
         },
         methods: {
             list(page) {
@@ -525,7 +537,17 @@
                         Toast.error("更新排序失败");
                     }
                 });
-            }
+            },
+            allTeacher() {
+                //等待框
+                Loading.show();
+                let _this = this;
+                _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/teacher/all', {}).then((response) => {
+                    Loading.hide();
+                    let resp = response.data;
+                    _this.teachers = resp.content;
+                })
+            },
         }
     }
 </script>

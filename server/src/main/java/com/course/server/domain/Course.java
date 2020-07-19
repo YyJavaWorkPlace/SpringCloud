@@ -3,9 +3,6 @@ package com.course.server.domain;
 import java.math.BigDecimal;
 import java.util.Date;
 
-/**
- * 课程表
- */
 public class Course {
     private String id;
 
@@ -32,6 +29,8 @@ public class Course {
     private Date createdAt;
 
     private Date updatedAt;
+
+    private String teacherId;
 
     public String getId() {
         return id;
@@ -137,6 +136,14 @@ public class Course {
         this.updatedAt = updatedAt;
     }
 
+    public String getTeacherId() {
+        return teacherId;
+    }
+
+    public void setTeacherId(String teacherId) {
+        this.teacherId = teacherId;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -156,6 +163,7 @@ public class Course {
         sb.append(", sort=").append(sort);
         sb.append(", createdAt=").append(createdAt);
         sb.append(", updatedAt=").append(updatedAt);
+        sb.append(", teacherId=").append(teacherId);
         sb.append("]");
         return sb.toString();
     }

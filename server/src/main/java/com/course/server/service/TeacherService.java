@@ -1,4 +1,5 @@
 package com.course.server.service;
+
 import com.course.server.domain.Teacher;
 import com.course.server.domain.TeacherExample;
 import com.course.server.dto.TeacherDto;
@@ -13,6 +14,7 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
+
 /**
  * Teacher 大章表业务逻辑
  */
@@ -39,7 +41,7 @@ public class TeacherService {
     }
 
     public void save(TeacherDto teacherDto) {
-        Teacher teacher = CopyUtil.copy(teacherDto,Teacher.class);
+        Teacher teacher = CopyUtil.copy(teacherDto, Teacher.class);
         if (StringUtils.isEmpty(teacherDto.getId())) {
             this.insert(teacher);
         } else {
@@ -58,5 +60,17 @@ public class TeacherService {
 
     public void delete(String id) {
         teacherMapper.deleteByPrimaryKey(id);
+    }
+
+    /**
+     * 查询所有讲师
+     *
+     * @return
+     */
+    public List<TeacherDto> all() {
+        TeacherExample teacherExample = new TeacherExample();
+        TeacherExample.Criteria criteria = teacherExample.createCriteria();
+        List<Teacher> teachers = teacherMapper.selectByExample(teacherExample);
+        return CopyUtil.copyList(teachers, TeacherDto.class);
     }
 }
