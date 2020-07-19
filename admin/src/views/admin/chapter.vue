@@ -1,9 +1,9 @@
 <template>
     <div>
         <div class="row" style="margin-bottom: 10px;">
-        <div class="col-xs-4 label label-lg label-info arrowed-in arrowed-right">
-            <b>{{course.name}}</b>
-        </div>
+            <div class="col-xs-4 label label-lg label-info arrowed-in arrowed-right">
+                <b>{{course.name}}</b>
+            </div>
         </div>
         <p>
             <router-link to="/business/course" class="btn btn-warning btn-xs">
@@ -41,7 +41,9 @@
                 <td>{{chapData.name}}</td>
                 <td>
                     <div class="hidden-sm hidden-xs btn-group">
-                        <button v-on:click="toSection(chapData)" type="button" class="btn btn-primary btn-primary btn-xs">小节</button>
+                        <button v-on:click="toSection(chapData)" type="button"
+                                class="btn btn-primary btn-primary btn-xs">小节
+                        </button>
 
                         <button v-on:click="edit(chapData)" class="btn btn-xs btn-info">
                             <i class="ace-icon fa fa-pencil bigger-120"></i>
@@ -94,28 +96,28 @@
             return {
                 chapter: {},
                 chapters: [],
-                course:{}
+                course: {}
             }
         },
         mounted: function () {
             let _this = this;
-            let course = SessionStorage.get("course")||{};
-            if (Tool.isEmpty(course)){
+            let course = SessionStorage.get("course") || {};
+            if (Tool.isEmpty(course)) {
                 _this.$route.push("/welcome");
             }
-            _this.course=course;
+            _this.course = course;
             _this.list(1);
-
+            this.$parent.activeSidebar("business-course-sidebar")
         },
         methods: {
             list(page) {
                 //等待框
                 Loading.show();
                 let _this = this;
-                _this.$ajax.post(process.env.VUE_APP_SERVER+'/business/admin/chapter/list', {
+                _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/chapter/list', {
                     page: page,
                     size: _this.$refs.pagination.size,
-                    courseId:_this.course.id
+                    courseId: _this.course.id
                 }).then((response) => {
                     Loading.hide();
                     let resp = response.data;
@@ -137,13 +139,13 @@
             save() {
                 let _this = this;
                 //保存校验
-                if (!Validator.require(_this.chapter.name,"名称")||
-                    !Validator.length(_this.chapter.courseId,"课程ID",1,8)){
+                if (!Validator.require(_this.chapter.name, "名称") ||
+                    !Validator.length(_this.chapter.courseId, "课程ID", 1, 8)) {
                     return;
                 }
-                _this.chapter.courseId=_this.course.id;
+                _this.chapter.courseId = _this.course.id;
                 Loading.show();
-                _this.$ajax.post(process.env.VUE_APP_SERVER+'/business/admin/chapter/save', _this.chapter
+                _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/chapter/save', _this.chapter
                 ).then((response) => {
                     Loading.hide();
                     let resp = response.data;
@@ -151,28 +153,28 @@
                         $("#form-model").modal("hide");
                         _this.list(1);
                         Toast.success("保存成功");
-                    }else{
+                    } else {
                         Toast.warning(resp.message);
                     }
                 })
             },
-            del(id){
-                let _this=this;
-                Confirm.show("删除后不可回复,确认删除?",function(){
+            del(id) {
+                let _this = this;
+                Confirm.show("删除后不可回复,确认删除?", function () {
                     Loading.show();
-                    _this.$ajax.delete(process.env.VUE_APP_SERVER +'/business/admin/chapter/delete/'+id).then((response)=>{
+                    _this.$ajax.delete(process.env.VUE_APP_SERVER + '/business/admin/chapter/delete/' + id).then((response) => {
                         Loading.hide();
-                        let resp=response.data;
-                        if (resp.success){
+                        let resp = response.data;
+                        if (resp.success) {
                             _this.list(1);
                             Toast.error("删除成功");
                         }
                     });
                 });
             },
-            toSection(chapter){
-                let _this=this;
-                SessionStorage.set("chapter",chapter);
+            toSection(chapter) {
+                let _this = this;
+                SessionStorage.set("chapter", chapter);
                 _this.$router.push("/business/section")
             }
         }
