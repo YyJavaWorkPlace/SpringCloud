@@ -2,8 +2,10 @@ package com.course.server.service;
 
 import com.course.server.domain.CourseCategory;
 import com.course.server.domain.CourseCategoryExample;
+import com.course.server.domain.CourseExample;
 import com.course.server.dto.CategoryDto;
 import com.course.server.dto.CourseCategoryDto;
+import com.course.server.dto.CourseSortDto;
 import com.course.server.dto.PageDto;
 import com.course.server.mapper.CourseCategoryMapper;
 import com.course.server.util.CopyUtil;
@@ -50,6 +52,7 @@ public class CourseCategoryService {
         }
     }
 
+
     private void insert(CourseCategory courseCategory) {
         courseCategory.setId(UuidUtil.getShortUuid());
         courseCategoryMapper.insert(courseCategory);
@@ -69,6 +72,7 @@ public class CourseCategoryService {
      * 在更新或插入后 都要先删除一次 在添加新的栏目信息
      * 根据某一课程 先清空课程分类，在保存课程分类
      * 防止外层忘记加事务
+     *
      * @param courseId
      * @param dtoList
      */
@@ -89,19 +93,16 @@ public class CourseCategoryService {
     }
 
     /**
-     *
      * @param courseId 课程ID
      * @return 返回课程分类列表
      */
-    public List<CourseCategoryDto> listByCourse(String courseId){
+    public List<CourseCategoryDto> listByCourse(String courseId) {
         CourseCategoryExample courseCategoryExample = new CourseCategoryExample();
         CourseCategoryExample.Criteria criteria = courseCategoryExample.createCriteria();
         criteria.andCourseIdEqualTo(courseId);
         List<CourseCategory> courseCategories = courseCategoryMapper.selectByExample(courseCategoryExample);
-        return CopyUtil.copyList(courseCategories,CourseCategoryDto.class);
+        return CopyUtil.copyList(courseCategories, CourseCategoryDto.class);
 
     }
-
-
 
 }

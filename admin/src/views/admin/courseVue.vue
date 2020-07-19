@@ -47,14 +47,17 @@
                         <p>
                             <button v-on:click="toChapter(course)" type="button" class="btn btn-white btn-pink btn-sm">
                                 大章
-                            </button>
+                            </button>&nbsp;
                             <button v-on:click="edit(course)" type="button" class="btn btn-white btn-pink btn-sm">编辑
-                            </button>
+                            </button>&nbsp;
                             <button v-on:click="editContent(course)" type="button"
                                     class="btn btn-white btn-pink btn-sm">内容
-                            </button>
+                            </button>&nbsp;
+                            <button v-on:click="openSortModal(course)" type="button"
+                                    class="btn btn-white btn-pink btn-sm">排序
+                            </button>&nbsp;
                             <button v-on:click="del(course.id)" type="button" class="btn btn-white btn-pink btn-sm">删除
-                            </button>
+                            </button>&nbsp;
                         </p>
                     </div>
                 </div>
@@ -179,7 +182,7 @@
                             </div>
                             <div class="form-group">
                                 <label>顺序</label>
-                                <input v-model="course.sort" type="text"
+                                <input disabled v-model="course.sort" type="text"
                                        class="form-control">
                             </div>
                         </form>
@@ -204,7 +207,7 @@
                         <form class="form-horizontal">
                             <div class="form-group">
                                 <div class="col-lg-12">
-                                   {{saveContentLable}}
+                                    {{saveContentLable}}
                                 </div>
                             </div>
                             <div class="form-group">
@@ -216,7 +219,43 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                        <button type="button" class="btn btn-primary">保存</button>
+                        <button type="button" class="btn btn-primary" v-on:click="saveContent()">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="course-sort-modal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog"
+             aria-labelledby="myLargeModalLabel">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">课程排序</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <label class="control-label col-lg-3">
+                                    当前排序
+                                </label>
+                                <div class="col-lg-9">
+                                    <input class="form-control" v-model="sort.oldSort" name="oldSort" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-lg-3">
+                                    新排序
+                                </label>
+                                <div class="col-lg-9">
+                                    <input class="form-control" v-model="sort.newSort" name="newSort">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" v-on:click="updateSort()">更新排序</button>
                     </div>
                 </div>
             </div>
@@ -239,7 +278,12 @@
                 COURSE_STATUS: COURSE_STATUS,
                 category: [],
                 tree: {},
-                saveContentLable:"",
+                saveContentLable: "",
+                sort: {
+                    id: "",
+                    oldSort: 0,
+                    newSort: 0
+                }
             }
         },
         mounted: function () {
@@ -264,7 +308,9 @@
             },
             add() {
                 let _this = this;
-                _this.course = {};
+                _this.course = {
+                    sort: _this.$refs.pagination.total + 1,
+                };
                 _this.tree.checkAllNodes(false);
                 $("#form-model").modal("show");
             },
@@ -389,6 +435,7 @@
             editContent(course) {
                 let _this = this;
                 let id = course.id;
+                _this.course = course;
                 $("#content").summernote({
                     focus: true,
                     height: 300
@@ -396,24 +443,24 @@
                 //先清空上一次富文本内容
                 $("#content").summernote('code', '');
                 //清空时间
-                _this.saveContentLable="";
+                _this.saveContentLable = "";
                 //等待准备Ajax请求
                 Loading.show();
-                _this.$ajax.get(process.env.VUE_APP_SERVER + '/business/admin/course/find-content/' + course.id).then((response) => {
+                _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/course/find-content/' + id).then((response) => {
                     Loading.hide();
                     let resp = response.data;
                     if (resp.success) {
                         //static 表示模态框不会点空白处被关闭
                         $("#course-content-modal").modal({backdrop: 'static', keyboard: false});
                         if (resp.content) {
-                            $("#content").summernote('code', resp.content);
+                            $("#content").summernote('code', resp.content.content);
                         }
                         //定时自动保存  setInterval 重复的定时任务 setTimeout只执行一次的定时任务
                         let saveContentInterval = setInterval(function () {
                             _this.saveContent();
                         }, 10000);
                         //关闭模态框后 清空自动保存任务清除上面的变量即可
-                        $("#course-content-modal").on('hidden.bs.model', function (e) {
+                        $("#course-content-modal").on('hidden.bs.modal', function (e) {
                             clearInterval(saveContentInterval);
                         });
                     } else {
@@ -436,11 +483,45 @@
                     if (resp.success) {
                         // Toast.success("内容保存成功");
                         let now = Tool.dataFormat("mm:ss");
-                        _this.saveContentLable="最后保存时间"+now;
+                        _this.saveContentLable = "最后保存时间" + now;
                     } else {
                         Toast.error(resp.message);
                     }
-                })
+                });
+            },
+            /**
+             * 打开模态框 设置初始值
+             * @param course
+             */
+            openSortModal(course) {
+                let _this = this;
+                _this.sort = {
+                    id: course.id,
+                    oldSort: course.sort,
+                    newSort: course.sort
+                };
+                $("#course-sort-modal").modal("show");
+            },
+            /**
+             * 更新排序
+             */
+            updateSort() {
+                let _this = this;
+                if (_this.sort.newSort === _this.sort.oldSort) {
+                    Toast.warning("排序没有变化");
+                    return;
+                }
+                Loading.show();
+                _this.$ajax.post(process.env.VUE_APP_SERVER + "/business/admin/course/sort-course", _this.sort).then((res) => {
+                    let response = res.data;
+                    if (response.success) {
+                        Toast.success("更新排序成功");
+                        $("#course-sort-modal").modal("hide");
+                        _this.list(1);
+                    } else {
+                        Toast.error("更新排序失败");
+                    }
+                });
             }
         }
     }

@@ -87,9 +87,17 @@ public class CourseController {
      * @return
      */
     @PostMapping("/save-content")
-    public ResponseDto saveContent(CourseContentDto courseContentDto) {
+    public ResponseDto saveContent(@RequestBody CourseContentDto courseContentDto) {
         ResponseDto responseDto = new ResponseDto();
         courseService.saveContent(courseContentDto);
+        return responseDto;
+    }
+
+    @PostMapping("/sort-course")
+    public ResponseDto sortCourse(@RequestBody CourseSortDto courseSortDto) {
+        LOG.info("更新排序");
+        ResponseDto responseDto = new ResponseDto();
+        courseService.updateSort(courseSortDto);
         return responseDto;
     }
 }

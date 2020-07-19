@@ -31,7 +31,7 @@ Tool = {
     dataFormat: function (format, date) {
         let result;
         if (!date) {
-            date = new date();
+            date = new Date();
         }
         const option = {
             "y+": date.getFullYear().toString(),  //年
@@ -42,7 +42,7 @@ Tool = {
             "s+": date.getSeconds().toString() //秒
         };
         for (let i in option) {
-            result = new RegExp("(" + i + ")").exec(format);
+            result = new RegExp("(" + i + ")").exec(format); //返回包含第一个匹配项信息的数组;或者在没有匹配项的情况下返回null.
             if (result) {
                 format = format.replace(result[1], (result[1].length == 1) ? (option[i]) : (option[i].padStart(result[1].length, "0")));
             }

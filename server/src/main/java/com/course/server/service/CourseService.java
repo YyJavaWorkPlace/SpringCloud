@@ -5,6 +5,7 @@ import com.course.server.domain.CourseContent;
 import com.course.server.domain.CourseExample;
 import com.course.server.dto.CourseContentDto;
 import com.course.server.dto.CourseDto;
+import com.course.server.dto.CourseSortDto;
 import com.course.server.dto.PageDto;
 import com.course.server.mapper.CourseContentMapper;
 import com.course.server.mapper.CourseMapper;
@@ -71,7 +72,7 @@ public class CourseService {
         }
 
         //批量保存课程分类
-        courseCategoryService.saveBatch(courseDto.getId(), courseDto.getCategorys());
+        courseCategoryService.saveBatch(course.getId(), courseDto.getCategorys());
     }
 
     private void insert(Course course) {
@@ -122,4 +123,35 @@ public class CourseService {
         }
         return i;
     }
+
+    /**
+     * 课程排序 oldsort newsort 根据 newsort 查找旧的
+     *
+     * @param courseSortDto
+     */
+    @Transactional
+    public void updateSort(CourseSortDto courseSortDto) {
+//        CourseExample courseExample = new CourseExample();
+//        CourseExample.Criteria criteria = courseExample.createCriteria();
+//        criteria.andSortEqualTo(courseSortDto.getNewSort());
+//        List<Course> courses = courseMapper.selectByExample(courseExample);
+//        Course course = courses.get(0);
+//        course.setSort(courseSortDto.getOldSort());
+//        update(course);
+//        Course nowcourse = courseMapper.selectByPrimaryKey(courseSortDto.getId());
+//        nowcourse.setSort(courseSortDto.getNewSort());
+//        update(nowcourse);
+        //修改当前记录的排序值
+        mycourseMapper.updateSort(courseSortDto);
+        //如果排序值变大
+        if (courseSortDto.getNewSort() > courseSortDto.getOldSort()) {
+            mycourseMapper.moveSortsForward(courseSortDto);
+        }
+
+        //如果排序值变小
+        if (courseSortDto.getNewSort() < courseSortDto.getOldSort()) {
+            mycourseMapper.moveSortsBackward(courseSortDto);
+        }
+    }
+
 }
