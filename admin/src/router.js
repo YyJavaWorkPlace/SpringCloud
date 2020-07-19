@@ -7,6 +7,7 @@ import Chapter from "./views/admin/chapter"
 import Section from "./views/admin/sectionVue"
 import courseVue from "./views/admin/courseVue";
 import categoryVue from "./views/admin/categoryVue";
+import teacherVue from "./views/admin/teacherVue";
 
 Vue.use(Router);
 
@@ -26,30 +27,35 @@ export default new Router({
             path: "/",
             name: "admin",
             component: Admin,
-            children:[{
-                path:"welcome",
+            children: [{
+                path: "welcome",
                 name: "welcome",
                 component: Welcome
             },
                 {
-                    path:"business/category",
+                    path: "business/category",
                     name: "business/category",
                     component: categoryVue
                 },
                 {
-                    path:"business/course",
+                    path: "business/course",
                     name: "business/course",
                     component: courseVue
                 },
                 {
-                    path:"business/chapter",
+                    path: "business/chapter",
                     name: "business/chapter",
                     component: Chapter
                 },
                 {
-                    path:"business/section",
+                    path: "business/section",
                     name: "business/section",
                     component: Section
+                },
+                {
+                    path: "business/teacher",
+                    name: "business/teacher",
+                    component: teacherVue
                 },
             ]
         },
