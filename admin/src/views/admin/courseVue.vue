@@ -367,10 +367,13 @@
                     });
                 });
             },
+            /**
+             * 点击大章
+             * */
             // 组件(页面)间传输数据可以用h5原生localStorage sessionStorage 也可以用js全局变量 vuex store 最后两者刷新后会丢失
             toChapter(course) {
                 let _this = this;
-                SessionStorage.set("course", course);
+                SessionStorage.set(SESSION_KEY_COURSE, course);
                 _this.$router.push("/business/chapter");
             },
             allCategory() {

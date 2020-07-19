@@ -101,7 +101,7 @@
         },
         mounted: function () {
             let _this = this;
-            let course = SessionStorage.get("course") || {};
+            let course = SessionStorage.get(SESSION_KEY_COURSE) || {};
             if (Tool.isEmpty(course)) {
                 _this.$route.push("/welcome");
             }
@@ -174,7 +174,7 @@
             },
             toSection(chapter) {
                 let _this = this;
-                SessionStorage.set("chapter", chapter);
+                SessionStorage.set(SESSION_KEY_CHAPTER, chapter);
                 _this.$router.push("/business/section")
             }
         }
