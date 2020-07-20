@@ -12,6 +12,11 @@ spring:
           uri: lb://business
           predicates:
           - Path=/business/**
+#          文件上传网关 实际项目可以单独配置网关 防止占用带宽
+        - id: file
+                uri: lb://file
+                predicates:
+                  - Path=/file/**
 server:
   port: 9000
 eureka:
