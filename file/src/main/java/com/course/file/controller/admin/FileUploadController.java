@@ -4,6 +4,7 @@ import com.course.server.dto.ResponseDto;
 import com.course.server.util.UuidUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,7 +23,12 @@ import java.io.IOException;
 public class FileUploadController {
     private static final Logger LOG = LoggerFactory.getLogger(FileUploadController.class);
 
-    public static final String File_NAME = "文件上传";
+    public static final String BUSSINESS_NAME = "文件上传";
+
+    @Value("${file.domain}")
+    private String FILE_DOMAIN;
+    @Value("${file.path}")
+    private String FILE_PATH;
 
     @RequestMapping("/upload")
     public ResponseDto upload(@RequestParam MultipartFile file) throws IOException {
@@ -33,12 +39,12 @@ public class FileUploadController {
         String fileName = file.getOriginalFilename();
         String key = UuidUtil.getShortUuid();
         //新文件名称
-        String fullPath = "F:\\uploadVideo\\course\\teacher" + key + "-" + fileName;
+        String fullPath = FILE_PATH + "teacher" + key + "-" + fileName;
         File desc = new File(fullPath);
         file.transferTo(desc);
         LOG.info("上传后的绝对路径:{}", desc.getAbsolutePath());
         ResponseDto responseDto = new ResponseDto();
-        responseDto.setContent("http://127.0.0.1:9000/file/f/teacher"+key+"-"+fileName);
+        responseDto.setContent(FILE_DOMAIN+"f/teacher" + key + "-" + fileName);
         return responseDto;
     }
 }

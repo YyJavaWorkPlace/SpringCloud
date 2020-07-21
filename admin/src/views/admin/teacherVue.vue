@@ -117,7 +117,11 @@
                             <div class="form-group">
                                 <label>头像</label>
                                 <input id="file-upload-input" type="file" v-on:change="uploadImage()">
-                                <img v-bind:src="teacher.image" class="img-responsive">
+                                <div v-show="teacher.image" class="row">
+                                    <div class="col-md-4">
+                                        <img v-bind:src="teacher.image" class="img-responsive">
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label>职位</label>
