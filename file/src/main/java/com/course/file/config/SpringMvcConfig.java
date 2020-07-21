@@ -15,6 +15,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class SpringMvcConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/f/**").addResourceLocations("file:F:/uploadVideo/");
+        registry.addResourceHandler("/f/**").addResourceLocations("file:F:/uploadVideo/course/");
     }
 }

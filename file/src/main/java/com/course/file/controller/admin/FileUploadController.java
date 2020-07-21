@@ -33,11 +33,12 @@ public class FileUploadController {
         String fileName = file.getOriginalFilename();
         String key = UuidUtil.getShortUuid();
         //新文件名称
-        String fullPath = "F:\\uploadVideo\\" + key + "-" + fileName;
+        String fullPath = "F:\\uploadVideo\\course\\teacher" + key + "-" + fileName;
         File desc = new File(fullPath);
         file.transferTo(desc);
         LOG.info("上传后的绝对路径:{}", desc.getAbsolutePath());
         ResponseDto responseDto = new ResponseDto();
+        responseDto.setContent("http://127.0.0.1:9000/file/f/teacher"+key+"-"+fileName);
         return responseDto;
     }
 }
