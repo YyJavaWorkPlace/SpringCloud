@@ -116,8 +116,7 @@
                             </div>
                             <div class="form-group">
                                 <label>头像</label>
-                                <input v-model="teacher.image" type="text"
-                                       class="form-control">
+                                <input id="file-upload-input" type="file" v-on:change="uploadImage()">
                             </div>
                             <div class="form-group">
                                 <label>职位</label>
@@ -132,7 +131,7 @@
                             <div class="form-group">
                                 <label>简介</label>
                                 <textarea v-model="teacher.intro"
-                                       class="form-control" rows="5">
+                                          class="form-control" rows="5">
                                 </textarea>
                             </div>
                         </form>
@@ -228,6 +227,20 @@
                             Toast.error("删除成功");
                         }
                     });
+                });
+            },
+            /**
+             * 文件上传
+             */
+            uploadImage() {
+                let _this = this;
+                let formData = new window.FormData();
+                // key :"file"必须和后端controller参数名一致
+                formData.append("file", document.querySelector('#file-upload-input').files[0]);
+                Loading.show();
+                _this.$ajax.post(process.env.VUE_APP_SERVER + '/file/admin/upload', formData).then((response) => {
+                    Loading.hide();
+                    let respp = response.data;
                 });
             }
         }
