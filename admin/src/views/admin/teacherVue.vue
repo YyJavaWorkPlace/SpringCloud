@@ -116,7 +116,11 @@
                             </div>
                             <div class="form-group">
                                 <label>头像</label>
-                                <input id="file-upload-input" type="file" v-on:change="uploadImage()">
+                                <button type="button" @click="selectImage()" class="btn btn-warning btn-xs">
+                                    <i class="ace-icon fa fa-upload"></i>
+                                    上传头像
+                                </button>
+                                <input class="hidden" id="file-upload-input" type="file" v-on:change="uploadImage()">
                                 <div v-show="teacher.image" class="row">
                                     <div class="col-md-4">
                                         <img v-bind:src="teacher.image" class="img-responsive">
@@ -250,6 +254,9 @@
                     console.log("头像地址：", image);
                     _this.teacher.image = image;
                 });
+            },
+            selectImage() {
+                $("#file-upload-input").trigger("click");
             }
         }
     }
