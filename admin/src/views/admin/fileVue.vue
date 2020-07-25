@@ -101,7 +101,7 @@
     import Pagination from "../../components/pagination";
 
     export default {
-        name: "File-file",
+        name: "file-file",
         components: {Pagination},
         data: function () {
             // 不使用return包裹的数据会在项目的全局可见，会造成变量污染；使用return包裹后数据中变量只在当前组件中生效，不会影响其他组件.
@@ -120,7 +120,7 @@
                 //等待框
                 Loading.show();
                 let _this = this;
-                _this.$ajax.post(process.env.VUE_APP_SERVER + '/File/admin/file/list', {
+                _this.$ajax.post(process.env.VUE_APP_SERVER + '/file/admin/file/list', {
                     page: page,
                     size: _this.$refs.pagination.size,
                 }).then((response) => {
@@ -152,7 +152,7 @@
                     return;
                 }
                 Loading.show();
-                _this.$ajax.post(process.env.VUE_APP_SERVER + '/File/admin/file/save', _this.file
+                _this.$ajax.post(process.env.VUE_APP_SERVER + '/file/admin/file/save', _this.file
                 ).then((response) => {
                     Loading.hide();
                     let resp = response.data;
@@ -169,7 +169,7 @@
                 let _this = this;
                 Confirm.show("删除后不可回复,确认删除?", function () {
                     Loading.show();
-                    _this.$ajax.delete(process.env.VUE_APP_SERVER + '/File/admin/file/delete/' + id).then((response) => {
+                    _this.$ajax.delete(process.env.VUE_APP_SERVER + '/file/admin/file/delete/' + id).then((response) => {
                         Loading.hide();
                         let resp = response.data;
                         if (resp.success) {
