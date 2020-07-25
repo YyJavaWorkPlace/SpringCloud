@@ -15,26 +15,26 @@
         <table id="simple-table" class="table  table-bordered table-hover">
             <thead>
             <tr>
-                                        <th>id</th>
-                        <th>相对路径</th>
-                        <th>文件名</th>
-                        <th>后缀</th>
-                        <th>大小</th>
-                        <th>用途</th>
-                        <th>创建时间</th>
+                <th>id</th>
+                <th>相对路径</th>
+                <th>文件名</th>
+                <th>后缀</th>
+                <th>大小</th>
+                <th>用途</th>
+                <th>创建时间</th>
                 <th>操作</th>
             </tr>
             </thead>
 
             <tbody>
             <tr v-for="file in files" :key="file.id">
-                            <td> {{file.id}}</td>
-                            <td> {{file.path}}</td>
-                            <td> {{file.name}}</td>
-                            <td> {{file.suffix}}</td>
-                            <td> {{file.size}}</td>
-                            <td>{{FILE_USE|optionArray(file.use)}}</td>
-                            <td> {{file.createdAt}}</td>
+                <td> {{file.id}}</td>
+                <td> {{file.path}}</td>
+                <td> {{file.name}}</td>
+                <td> {{file.suffix}}</td>
+                <td> {{file.size}}</td>
+                <td>{{FILE_USE|optionArray(file.use)}}</td>
+                <td> {{file.createdAt}}</td>
                 <td>
                     <div class="hidden-sm hidden-xs btn-group">
                         <button v-on:click="edit(file)" class="btn btn-xs btn-info">
@@ -53,39 +53,39 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                    aria-hidden="true">&times;</span></button>
+                                aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title">新增文件</h4>
                     </div>
                     <div class="modal-body">
                         <form>
-                                        <div class="form-group">
-                                            <label>相对路径</label>
-                                            <input v-model="file.path" type="text"
-                                                   class="form-control">
-                                        </div>
-                                        <div class="form-group">
-                                            <label>文件名</label>
-                                            <input v-model="file.name" type="text"
-                                                   class="form-control">
-                                        </div>
-                                        <div class="form-group">
-                                            <label>后缀</label>
-                                            <input v-model="file.suffix" type="text"
-                                                   class="form-control">
-                                        </div>
-                                        <div class="form-group">
-                                            <label>大小</label>
-                                            <input v-model="file.size" type="text"
-                                                   class="form-control">
-                                        </div>
-                                        <div class="form-group">
-                                            <label>用途</label>
-                                            <select v-model="file.use" class="form-control">
-                                                <option v-for="o in FILE_USE" :key="o.num"
-                                                        v-bind:value="o.key">{{o.value}}
-                                                </option>
-                                            </select>
-                                        </div>
+                            <div class="form-group">
+                                <label>相对路径</label>
+                                <input v-model="file.path" type="text"
+                                       class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>文件名</label>
+                                <input v-model="file.name" type="text"
+                                       class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>后缀</label>
+                                <input v-model="file.suffix" type="text"
+                                       class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>大小</label>
+                                <input v-model="file.size" type="text"
+                                       class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>用途</label>
+                                <select v-model="file.use" class="form-control">
+                                    <option v-for="o in FILE_USE" :key="o.num"
+                                            v-bind:value="o.key">{{o.value}}
+                                    </option>
+                                </select>
+                            </div>
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -106,10 +106,10 @@
         data: function () {
             // 不使用return包裹的数据会在项目的全局可见，会造成变量污染；使用return包裹后数据中变量只在当前组件中生效，不会影响其他组件.
             return {
-            file:{},
-            files:[],
-            FILE_USE: FILE_USE,
-        }
+                file: {},
+                files: [],
+                FILE_USE: FILE_USE,
+            }
         },
         mounted: function () {
             let _this = this;

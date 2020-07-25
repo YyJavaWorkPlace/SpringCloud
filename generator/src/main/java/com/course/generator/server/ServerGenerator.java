@@ -16,10 +16,10 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class ServerGenerator {
-    static String MODULE = "business";
+    static String MODULE = "file";
     static String toServicePath = "server\\src\\main\\java\\com\\course\\server\\service\\";
     static String toDtoPath = "server\\src\\main\\java\\com\\course\\server\\dto\\";
-    static String toControllerPath = MODULE + "\\src\\main\\java\\com\\course\\business\\controller\\admin\\";
+    static String toControllerPath = MODULE + "\\src\\main\\java\\com\\course\\" + MODULE + "\\controller\\admin\\";
     static String generatorConfigPath = "server\\src\\main\\resources\\generator\\generatorConfig.xml";
 
     public static void main(String[] args) throws IOException, TemplateException, SQLException, DocumentException {
@@ -35,13 +35,13 @@ public class ServerGenerator {
         //定义一个Element用于遍历
         Element tableElement;
         //取第一个"table"节点
-        tableElement=contextElement.elementIterator("table").next();
+        tableElement = contextElement.elementIterator("table").next();
         String Domain = tableElement.attributeValue("domainObjectName");
-        String tableName= tableElement.attributeValue("tableName");
+        String tableName = tableElement.attributeValue("tableName");
         String tableNameCn = DbUtil.getTableComment(tableName);
-        String domain=Domain.substring(0,1).toLowerCase()+Domain.substring(1);
-        System.out.println("表:"+tableElement.attributeValue("tableName"));
-        System.out.println("Domian:"+tableElement.attributeValue("domainObjectName"));
+        String domain = Domain.substring(0, 1).toLowerCase() + Domain.substring(1);
+        System.out.println("表:" + tableElement.attributeValue("tableName"));
+        System.out.println("Domian:" + tableElement.attributeValue("domainObjectName"));
         String module = MODULE;
         List<Field> fieldList = DbUtil.getColumnByTableName(tableName);
         Set<String> typeSet = getJavaTypes(fieldList);
