@@ -15,7 +15,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class VueGenerator {
-    static String MODULE = "business";
+    static String MODULE = "File";
     static String toVuePath = "admin\\src\\views\\admin\\";
     static String generatorConfigPath = "server\\src\\main\\resources\\generator\\generatorConfig.xml";
 

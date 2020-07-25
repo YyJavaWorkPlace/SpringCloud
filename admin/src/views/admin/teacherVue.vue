@@ -116,12 +116,10 @@
                             </div>
                             <div class="form-group">
                                 <label>头像</label>
-                                <button type="button" @click="selectImage()" class="btn btn-warning btn-xs">
-                                    <i class="ace-icon fa fa-upload"></i>
-                                    上传头像
-                                </button>
-                                <input class="hidden" ref="file" id="file-upload-input" type="file"
-                                       v-on:change="uploadImage()">
+                                <file v-bind:inputId="'image-upload'"
+                                      v-bind:text="'上传头像1'"
+                                      v-bind:after-upload="afterUpload"
+                                      v-bind:suffixs="['jpg','png','jpeg']"></file>
                                 <div v-show="teacher.image" class="row">
                                     <div class="col-md-4">
                                         <img v-bind:src="teacher.image" class="img-responsive">
@@ -157,10 +155,11 @@
 </template>
 <script>
     import Pagination from "../../components/pagination";
+    import File from "../../components/file";
 
     export default {
         name: "business-teacher",
-        components: {Pagination},
+        components: {File, Pagination},
         data: function () {
             // 不使用return包裹的数据会在项目的全局可见，会造成变量污染；使用return包裹后数据中变量只在当前组件中生效，不会影响其他组件.
             return {
@@ -239,44 +238,12 @@
                     });
                 });
             },
-            /**
-             * 文件上传
-             */
-            uploadImage() {
+            afterUpload(resp) {
                 let _this = this;
-                let formData = new window.FormData();
-                // key :"file"必须和后端controller参数名一致
-                let file = _this.$refs.file.files[0];
-                //判断文件上传格式
-                let suffixs = ["jpg", "jpeg", "png"];
-                let fileName = file.name;
-                //获取上传文件的文件名后缀
-                let suffix = fileName.substring(fileName.lastIndexOf(".") + 1, File.length).toLocaleLowerCase();
-                let validateSuffix = false;
-                for (let i = 0; i < suffixs.length; i++) {
-                    if (suffixs[i].toLocaleLowerCase() == suffix) {
-                        validateSuffix = true;
-                        break;
-                    }
-                }
-                //校验未通过
-                if (!validateSuffix) {
-                    Toast.warning("文件格式不正确，仅支持上传" + suffixs.join(","));
-                    return;
-                }
-                formData.append("file", file);
-                Loading.show();
-                _this.$ajax.post(process.env.VUE_APP_SERVER + '/file/admin/upload', formData).then((response) => {
-                    Loading.hide();
-                    let resp = response.data;
-                    let image = resp.content;
-                    console.log("头像地址：", image);
-                    _this.teacher.image = image;
-                });
-            },
-            selectImage() {
-                $("#file-upload-input").trigger("click");
+                let image = resp.content;
+                _this.teacher.image = image;
             }
+
         }
     }
 </script>

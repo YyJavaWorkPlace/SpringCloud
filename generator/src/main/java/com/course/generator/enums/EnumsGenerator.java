@@ -1,9 +1,6 @@
 package com.course.generator.enums;
 
-import com.course.server.enums.CourseChargeEnum;
-import com.course.server.enums.CourseLevelEnum;
-import com.course.server.enums.CourseStatusEnum;
-import com.course.server.enums.SectionChargeEnum;
+import com.course.server.enums.*;
 
 import java.io.*;
 import java.lang.reflect.Method;
@@ -87,6 +84,7 @@ public class EnumsGenerator {
         String key = toUnderline(clazz.getSimpleName());
         toJson(clazz, key, bufferObject, bufferArray);
     }
+
     /**
      * 使用反射生成js中固定格式的数据
      *
@@ -138,9 +136,10 @@ public class EnumsGenerator {
         long begin = System.currentTimeMillis();
         try {
             toJson(SectionChargeEnum.class, bufferObject, bufferArray);
-            toJson(CourseLevelEnum.class,bufferObject,bufferArray);
-            toJson(CourseStatusEnum.class,bufferObject,bufferArray);
-            toJson(CourseChargeEnum.class,bufferObject,bufferArray);
+            toJson(CourseLevelEnum.class, bufferObject, bufferArray);
+            toJson(CourseStatusEnum.class, bufferObject, bufferArray);
+            toJson(CourseChargeEnum.class, bufferObject, bufferArray);
+            toJson(FileTypeEnum.class, bufferObject, bufferArray);
             StringBuffer buffer = bufferObject.append("\r\n").append(bufferArray);
             writeJs(buffer);
         } catch (Exception e) {
