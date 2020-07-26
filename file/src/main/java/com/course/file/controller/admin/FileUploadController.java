@@ -2,8 +2,10 @@ package com.course.file.controller.admin;
 
 import com.course.server.dto.FileDto;
 import com.course.server.dto.ResponseDto;
+import com.course.server.enums.FileTypeEnum;
 import com.course.server.service.FileService;
 import com.course.server.util.UuidUtil;
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,17 +38,24 @@ public class FileUploadController {
     private FileService fileService;
 
     @RequestMapping("/upload")
-    public ResponseDto upload(@RequestParam MultipartFile file) throws IOException {
-        LOG.info("文件上传开始:{}", file);
+    public ResponseDto upload(@RequestParam MultipartFile file, String use) throws IOException {
+        LOG.info("文件上传开始");
         LOG.info("文件名:{}", file.getOriginalFilename());
         LOG.info("文件大小:{}", String.valueOf(file.getSize()));
         //保存文件到本地
+        FileTypeEnum fileTypeEnum = FileTypeEnum.getByCode(use);
         String fileName = file.getOriginalFilename();
 
         String suffix = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+        //如果文件夹不存在则创建
+        String dirname = fileTypeEnum.name().toLowerCase();
+        File fullDir = new File(FILE_PATH + dirname);
+        if (!fullDir.exists()) {
+            fullDir.mkdir();
+        }
 
         String key = UuidUtil.getShortUuid();
-        String path = "teacher/" + key + "." + suffix;
+        String path = dirname + File.separator + key + "." + suffix;
         //新文件名称
         String fullPath = FILE_PATH + path;
         File desc = new File(fullPath);
@@ -62,7 +71,7 @@ public class FileUploadController {
          */
         fileDto.setSize(Math.toIntExact(file.getSize()));
         fileDto.setSuffix(suffix);
-        fileDto.setUse("");
+        fileDto.setUse(use);
         fileService.save(fileDto);
 
         ResponseDto responseDto = new ResponseDto();

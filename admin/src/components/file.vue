@@ -26,6 +26,9 @@
                 type: Function,
                 default: null
             },
+            use: {
+                default: ""
+            }
         },
         data: function () {
             //组件内部变量定义
@@ -60,6 +63,7 @@
                     return;
                 }
                 formData.append("file", file);
+                formData.append("use", _this.use);
                 Loading.show();
                 _this.$ajax.post(process.env.VUE_APP_SERVER + '/file/admin/upload', formData).then((response) => {
                     Loading.hide();
@@ -70,7 +74,7 @@
                 });
             },
             selectFile() {
-                let _this=this;
+                let _this = this;
                 $("#" + _this.inputId + "-input").trigger("click");
             }
         }

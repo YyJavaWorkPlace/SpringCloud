@@ -40,4 +40,13 @@ public enum FileTypeEnum {
     public void setDesc(String desc) {
         this.desc = desc;
     }
+
+    public static FileTypeEnum getByCode(String code) {
+        for (FileTypeEnum e : FileTypeEnum.values()) {
+            if (code.equals(e.getCode())) {
+                return e;
+            }
+        }
+        return null;
+    }
 }
