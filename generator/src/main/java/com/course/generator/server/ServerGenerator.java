@@ -16,7 +16,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class ServerGenerator {
-    static String MODULE = "file";
+    static String MODULE = "business";
     static String toServicePath = "server\\src\\main\\java\\com\\course\\server\\service\\";
     static String toDtoPath = "server\\src\\main\\java\\com\\course\\server\\dto\\";
     static String toControllerPath = MODULE + "\\src\\main\\java\\com\\course\\" + MODULE + "\\controller\\admin\\";

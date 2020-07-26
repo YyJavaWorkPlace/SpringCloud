@@ -116,7 +116,7 @@
                             </div>
                             <div class="form-group">
                                 <label>头像</label>
-                                <file v-bind:inputId="'image-upload'"
+                                <file v-bind:input-id="'image-upload'"
                                       v-bind:text="'上传头像'"
                                       v-bind:after-upload="afterUpload"
                                       v-bind:suffixs="['jpg','png','jpeg']"

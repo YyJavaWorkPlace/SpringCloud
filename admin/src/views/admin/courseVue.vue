@@ -60,7 +60,7 @@
                             </button>&nbsp;
                             <button v-on:click="edit(course)" type="button" class="btn btn-white btn-pink btn-sm">编辑
                             </button>&nbsp;
-                            <button v-on:click="editContent(course)" type="button"
+                            <button v-on:click="toContent(course)" type="button"
                                     class="btn btn-white btn-pink btn-sm">内容
                             </button>&nbsp;
                             <button v-on:click="openSortModal(course)" type="button"
@@ -120,7 +120,7 @@
         <!--            </tr>-->
         <!--            </tbody>-->
         <!--        </table>-->
-        <div id="form-model" class="modal fade" tabindex="-1" role="dialog">
+        <div id="form-model" class="modal fade" tabindex="-1" role="dialog" style="overflow: auto">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -139,7 +139,7 @@
                             </div>
                             <div class="form-group">
                                 <label>封面</label>
-                                <file v-bind:inputId="'image-upload'"
+                                <file v-bind:input-id="'image-upload'"
                                       v-bind:text="'上传封面'"
                                       v-bind:after-upload="afterUpload"
                                       v-bind:suffixs="['jpg','png','jpeg']"
@@ -231,6 +231,35 @@
                         <h4 class="modal-title" id="myModalLabel">课程内容编辑</h4>
                     </div>
                     <div class="modal-body">
+                        <file v-bind:input-id="'video-upload'"
+                              v-bind:text="'上传文件'"
+                              v-bind:after-upload="afterUploadContentFile"
+                              v-bind:suffixs="['jpg','png','jpeg']"
+                              v-bind:use="FILE_USE[0].key"></file>
+                        <br>
+                        <table id="simple-table" class="table  table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th>名称</th>
+                                <th>地址</th>
+                                <th>大小</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="(f,i) in files" v-bind:key="f.id">
+                                <td> {{f.name}}</td>
+                                <td> {{f.url}}</td>
+                                <td> {{f.size|formatFileSize}}</td>
+                                <td>
+                                    <button v-on:click="delFile(f)" class="btn btn-xs btn-danger">
+                                        <i class="ace-icon fa fa-trash-o bigger-120"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
                         <form class="form-horizontal">
                             <div class="form-group">
                                 <div class="col-lg-12">
@@ -295,7 +324,7 @@
 
     export default {
         name: "business-course",
-        components: {Pagination,File},
+        components: {Pagination, File},
         data: function () {
             // 不使用return包裹的数据会在项目的全局可见，会造成变量污染；使用return包裹后数据中变量只在当前组件中生效，不会影响其他组件.
             return {
@@ -315,6 +344,7 @@
                 },
                 //页面打开加载所有的讲师
                 teachers: [],
+                files: [],
             }
         },
         mounted: function () {
@@ -325,6 +355,9 @@
             _this.list(1);
         },
         methods: {
+            /**
+             * 列表查询
+             * */
             list(page) {
                 //等待框
                 Loading.show();
@@ -339,6 +372,9 @@
                     _this.$refs.pagination.render(page, resp.content.total);
                 })
             },
+            /**
+             * 点击[新增]
+             * */
             add() {
                 let _this = this;
                 _this.course = {
@@ -347,6 +383,9 @@
                 _this.tree.checkAllNodes(false);
                 $("#form-model").modal("show");
             },
+            /**
+             * 点击[修改]
+             * */
             edit(course) {
                 let _this = this;
                 //修改的内容不会影响到原course 所以点击取消后数据不会发生更改
@@ -355,6 +394,9 @@
                 _this.listCategory(course.id);
                 $("#form-model").modal("show");
             },
+            /**
+             * 点击[保存]
+             * */
             save() {
                 let _this = this;
                 if (1 != 1
@@ -386,6 +428,9 @@
                     }
                 });
             },
+            /**
+             * 点击[删除]
+             * */
             del(id) {
                 let _this = this;
                 Confirm.show("删除后不可回复,确认删除?", function () {
@@ -401,7 +446,7 @@
                 });
             },
             /**
-             * 点击大章
+             * 点击[大章]
              * */
             // 组件(页面)间传输数据可以用h5原生localStorage sessionStorage 也可以用js全局变量 vuex store 最后两者刷新后会丢失
             toChapter(course) {
@@ -409,6 +454,15 @@
                 SessionStorage.set(SESSION_KEY_COURSE, course);
                 _this.$router.push("/business/chapter");
             },
+            /**
+             * 点击[内容]
+             * */
+            toContent(course) {
+                let _this = this;
+                SessionStorage.set(SESSION_KEY_COURSE, course);
+                _this.$router.push("/business/content");
+            },
+
             allCategory() {
                 //等待框
                 Loading.show();
@@ -465,67 +519,6 @@
                 });
             },
             /**
-             * 打开内容编辑页
-             * @param course
-             */
-            editContent(course) {
-                let _this = this;
-                let id = course.id;
-                _this.course = course;
-                $("#content").summernote({
-                    focus: true,
-                    height: 300
-                });
-                //先清空上一次富文本内容
-                $("#content").summernote('code', '');
-                //清空时间
-                _this.saveContentLable = "";
-                //等待准备Ajax请求
-                Loading.show();
-                _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/course/find-content/' + id).then((response) => {
-                    Loading.hide();
-                    let resp = response.data;
-                    if (resp.success) {
-                        //static 表示模态框不会点空白处被关闭
-                        $("#course-content-modal").modal({backdrop: 'static', keyboard: false});
-                        if (resp.content) {
-                            $("#content").summernote('code', resp.content.content);
-                        }
-                        //定时自动保存  setInterval 重复的定时任务 setTimeout只执行一次的定时任务
-                        let saveContentInterval = setInterval(function () {
-                            _this.saveContent();
-                        }, 10000);
-                        //关闭模态框后 清空自动保存任务清除上面的变量即可
-                        $("#course-content-modal").on('hidden.bs.modal', function (e) {
-                            clearInterval(saveContentInterval);
-                        });
-                    } else {
-                        Toast.warning(resp.message);
-                    }
-                });
-            },
-            /**
-             * 保存内容
-             */
-            saveContent() {
-                let _this = this;
-                let content = $("#content").summernote("code");
-                _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/course/save-content', {
-                    content: content,
-                    id: _this.course.id,
-                }).then((response) => {
-                    Loading.hide();
-                    let resp = response.data;
-                    if (resp.success) {
-                        // Toast.success("内容保存成功");
-                        let now = Tool.dataFormat("mm:ss");
-                        _this.saveContentLable = "最后保存时间" + now;
-                    } else {
-                        Toast.error(resp.message);
-                    }
-                });
-            },
-            /**
              * 打开模态框 设置初始值
              * @param course
              */
@@ -573,7 +566,7 @@
                 let _this = this;
                 let image = resp.content.path;
                 _this.course.image = image;
-            }
+            },
         }
     }
 </script>

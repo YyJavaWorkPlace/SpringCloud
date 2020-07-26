@@ -48,6 +48,22 @@ Tool = {
             }
         }
         return format;
-
+    },
+    /**
+     * 移除对象数组中的对象
+     * @param array
+     * @param obj
+     */
+    removeObj: function (array, obj) {
+        let index = -1;
+        for (let i = 0; i < array.length; i++) {
+            if (arr[i] === obj) {
+                //删除一个元素 该方法会改变原始数组
+                array.splice(i, 1);
+                index = i;
+                break;
+            }
+        }
+        return index;
     }
 };

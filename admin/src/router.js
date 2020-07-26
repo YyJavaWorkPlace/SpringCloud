@@ -9,6 +9,7 @@ import courseVue from "./views/admin/courseVue";
 import categoryVue from "./views/admin/categoryVue";
 import teacherVue from "./views/admin/teacherVue";
 import fileVue from "./views/admin/fileVue";
+import contentVue from "./views/admin/contentVue";
 
 Vue.use(Router);
 
@@ -52,6 +53,11 @@ export default new Router({
                     path: "business/section",
                     name: "business/section",
                     component: Section
+                },
+                {
+                    path: "business/content",
+                    name: "business/content",
+                    component: contentVue
                 },
                 {
                     path: "business/teacher",
