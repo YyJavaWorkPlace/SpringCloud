@@ -77,8 +77,17 @@
                                 <p class="form-control-static">{{chapter.name}}</p>
                             </div>
                             <div class="form-group">
-                                <label>视频地址</label>
-                                <input v-model="section.video" type="text" class="form-control">
+                                <label>视频</label>
+                                <file v-bind:inputId="'video-upload'"
+                                      v-bind:text="'上传视频'"
+                                      v-bind:after-upload="afterUpload"
+                                      v-bind:suffixs="['mp4']"
+                                      v-bind:use="FILE_USE[0].key"></file>
+                                <div v-show="section.video" class="row">
+                                    <div class="col-md-9">
+                                        <video v-bind:src="section.video" controls="controls"></video>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label>时长</label>
@@ -108,16 +117,18 @@
 </template>
 <script>
     import Pagination from "../../components/pagination";
+    import File from "../../components/file";
 
     export default {
         name: "section",
-        components: {Pagination},
+        components: {Pagination, File},
         data: function () {
             // 不使用return包裹的数据会在项目的全局可见，会造成变量污染；使用return包裹后数据中变量只在当前组件中生效，不会影响其他组件.
             return {
                 section: {},
                 sections: [],
                 SECTION_CHARGE: SECTION_CHARGE,
+                FILE_USE: FILE_USE,
                 chapter: {},
                 course: {},
             }
@@ -200,7 +211,19 @@
                         }
                     });
                 });
+            },
+            afterUpload(resp) {
+                let _this = this;
+                let video = resp.content.path;
+                _this.section.video = video;
             }
         }
     }
 </script>
+<style scoped>
+    video {
+        width: 100%;
+        height: auto;
+        margin-top: 10px;
+    }
+</style>

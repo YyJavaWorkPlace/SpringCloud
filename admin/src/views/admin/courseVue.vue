@@ -130,10 +130,24 @@
                     </div>
                     <div class="modal-body">
                         <form>
+
                             <div class="form-group">
                                 <label>分类</label>
                                 <div class="col-ms-10">
                                     <ul id="treeDemo" class="ztree"></ul>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>封面</label>
+                                <file v-bind:inputId="'image-upload'"
+                                      v-bind:text="'上传封面'"
+                                      v-bind:after-upload="afterUpload"
+                                      v-bind:suffixs="['jpg','png','jpeg']"
+                                      v-bind:use="FILE_USE[0].key"></file>
+                                <div v-show="course.image" class="row">
+                                    <div class="col-md-6">
+                                        <img v-bind:src="course.image" class="img-responsive">
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -162,11 +176,6 @@
                             <div class="form-group">
                                 <label>价格(元)</label>
                                 <input v-model="course.price" type="text"
-                                       class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label>封面</label>
-                                <input v-model="course.image" type="text"
                                        class="form-control">
                             </div>
                             <div class="form-group">
@@ -282,10 +291,11 @@
 </template>
 <script>
     import Pagination from "../../components/pagination";
+    import File from "../../components/file";
 
     export default {
         name: "business-course",
-        components: {Pagination},
+        components: {Pagination,File},
         data: function () {
             // 不使用return包裹的数据会在项目的全局可见，会造成变量污染；使用return包裹后数据中变量只在当前组件中生效，不会影响其他组件.
             return {
@@ -294,6 +304,7 @@
                 COURSE_LEVEL: COURSE_LEVEL,
                 COURSE_CHARGE: COURSE_CHARGE,
                 COURSE_STATUS: COURSE_STATUS,
+                FILE_USE: FILE_USE,
                 category: [],
                 tree: {},
                 saveContentLable: "",
@@ -558,6 +569,11 @@
                     _this.teachers = resp.content;
                 })
             },
+            afterUpload(resp) {
+                let _this = this;
+                let image = resp.content.path;
+                _this.course.image = image;
+            }
         }
     }
 </script>
@@ -571,8 +587,8 @@
     /*    margin-left: 10px;*/
     /*}*/
     /*当分辨率比1199小 就会变小字体*/
-    @media(max-width: 1199px){
-        .caption h3{
+    @media (max-width: 1199px) {
+        .caption h3 {
             font-size: 16px;
         }
     }
