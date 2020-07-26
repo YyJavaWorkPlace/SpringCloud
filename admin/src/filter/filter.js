@@ -58,7 +58,7 @@ let formatSecond = (value) => {
     }
     let result = "" + PrefixInteger(second, 2) + "";
     result = "" + PrefixInteger(minute, 2) + ":" + result;
-    result = "" + PrefixInteger(hour, 2) + ":"+result;
+    result = "" + PrefixInteger(hour, 2) + ":" + result;
     return result;
 };
 /**
@@ -68,9 +68,26 @@ let formatSecond = (value) => {
 var PrefixInteger = function (num, length) {
     return (Array(length).join('0') + num).slice(-length);
 };
+/**
+ * 格式化文件大小
+ * @param value
+ * @returns {string}
+ */
+let formatFileSize = (value) => {
+    value = value || 0;
+    let result;
+    //大于100K 显示MB单位
+    if (result > 100 * 1024) {
+        result = Math.round((value / 1024 / 1024) * 100) / 100 + "MB";
+    } else {
+        result = Math.round((value / 1024) * 100) / 100 + "KB";
+    }
+    return result;
+};
 
 export default {
     optionKV,
     optionArray,
-    formatSecond
+    formatSecond,
+    formatFileSize
 }

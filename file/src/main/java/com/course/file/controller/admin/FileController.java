@@ -26,5 +26,4 @@ public class FileController {
         responseDto.setContent(pageDto);
         return responseDto;
     }
-
 }

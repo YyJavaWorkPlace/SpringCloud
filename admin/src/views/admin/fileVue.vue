@@ -27,7 +27,7 @@
                 <td> {{file.path}}</td>
                 <td> {{file.name}}</td>
                 <td> {{file.suffix}}</td>
-                <td> {{file.size}}</td>
+                <td> {{file.size|formatFileSize}}</td>
                 <td>{{FILE_USE|optionArray(file.use)}}</td>
                 <td> {{file.createdAt}}</td>
             </tr>
@@ -61,7 +61,7 @@
                 _this.$ajax.post(process.env.VUE_APP_SERVER + '/file/admin/file/list', {
                     page: page,
                     size: _this.$refs.pagination.size,
-                }).then((response) => {S
+                }).then((response) => {
                     Loading.hide();
                     let resp = response.data;
                     _this.files = resp.content.list;
