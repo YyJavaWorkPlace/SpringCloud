@@ -78,11 +78,11 @@
                             </div>
                             <div class="form-group">
                                 <label>视频</label>
-                                <file v-bind:input-id="'video-upload'"
-                                      v-bind:text="'上传视频'"
+                                <BigFile v-bind:input-id="'video-upload'"
+                                      v-bind:text="'上传大视频'"
                                       v-bind:after-upload="afterUpload"
                                       v-bind:suffixs="['mp4']"
-                                      v-bind:use="FILE_USE[0].key"></file>
+                                      v-bind:use="FILE_USE[0].key"></BigFile>
                                 <div v-show="section.video" class="row">
                                     <div class="col-md-9">
                                         <video id="video" v-bind:src="section.video" controls="controls"></video>
@@ -117,11 +117,11 @@
 </template>
 <script>
     import Pagination from "../../components/pagination";
-    import File from "../../components/file";
+    import BigFile from "../../components/big-file";
 
     export default {
         name: "section",
-        components: {Pagination, File},
+        components: {BigFile, Pagination},
         data: function () {
             // 不使用return包裹的数据会在项目的全局可见，会造成变量污染；使用return包裹后数据中变量只在当前组件中生效，不会影响其他组件.
             return {
