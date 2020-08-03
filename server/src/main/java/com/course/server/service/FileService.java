@@ -1,5 +1,4 @@
 package com.course.server.service;
-
 import com.course.server.domain.File;
 import com.course.server.domain.FileExample;
 import com.course.server.dto.FileDto;
@@ -14,8 +13,7 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Date;
-
+        import java.util.Date;
 /**
  * File 大章表业务逻辑
  */
@@ -42,7 +40,7 @@ public class FileService {
     }
 
     public void save(FileDto fileDto) {
-        File file = CopyUtil.copy(fileDto, File.class);
+        File file = CopyUtil.copy(fileDto,File.class);
         if (StringUtils.isEmpty(fileDto.getId())) {
             this.insert(file);
         } else {
@@ -51,14 +49,14 @@ public class FileService {
     }
 
     private void insert(File file) {
-        Date now = new Date();
-        file.setCreatedAt(now);
+            Date now = new Date();
+                file.setUpdatedAt(now);
         file.setId(UuidUtil.getShortUuid());
         fileMapper.insert(file);
     }
 
     private void update(File file) {
-        file.setUpdatedAt(new Date());
+              file.setUpdatedAt(new Date());
         fileMapper.updateByPrimaryKey(file);
     }
 
