@@ -247,7 +247,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="(f,i) in files" v-bind:key="f.id">
+                            <tr v-for="(f) in files" v-bind:key="f.id">
                                 <td> {{f.name}}</td>
                                 <td> {{f.url}}</td>
                                 <td> {{f.size|formatFileSize}}</td>

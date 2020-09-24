@@ -38,13 +38,11 @@ public class FileUploadController {
     private FileService fileService;
 
     @RequestMapping("/upload")
-    public ResponseDto upload(@RequestParam MultipartFile file, String use, String name, String suffix, Integer size, Integer shardIndex, Integer shardSize, Integer shardTotal) throws IOException {
+    public ResponseDto upload(@RequestParam MultipartFile shard, String use, String name, String suffix, Integer size, Integer shardIndex, Integer shardSize, Integer shardTotal,String key) throws IOException {
         LOG.info("文件上传开始");
+
         //保存文件到本地
         FileTypeEnum fileTypeEnum = FileTypeEnum.getByCode(use);
-        String fileName = file.getOriginalFilename();
-
-//        String suffix = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
         //如果文件夹不存在则创建
         String dirname = fileTypeEnum.name().toLowerCase();
         File fullDir = new File(FILE_PATH + dirname);
@@ -52,12 +50,11 @@ public class FileUploadController {
             fullDir.mkdir();
         }
 
-        String key = UuidUtil.getShortUuid();
-        String path = dirname + File.separator + key + "." + suffix;
+        String path = dirname +"/" + key + "." + suffix;
         //新文件名称
         String fullPath = FILE_PATH + path;
         File desc = new File(fullPath);
-        file.transferTo(desc);
+        shard.transferTo(desc);
         LOG.info("上传后的绝对路径:{}", desc.getAbsolutePath());
 
         LOG.info("保存文件记录开始");
@@ -75,10 +72,9 @@ public class FileUploadController {
         fileDto.setShardSize(shardSize);
         fileDto.setKey(key);
         fileService.save(fileDto);
-
         ResponseDto responseDto = new ResponseDto();
-        fileDto.setPath(FILE_DOMAIN + path);
         responseDto.setContent(fileDto);
+        fileDto.setPath(FILE_DOMAIN + path);
         return responseDto;
     }
 
