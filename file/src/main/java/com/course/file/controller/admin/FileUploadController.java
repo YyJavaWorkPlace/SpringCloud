@@ -52,7 +52,13 @@ public class FileUploadController {
             fullDir.mkdir();
         }
 
-        String path = dirname + "/" + key + "." + suffix;
+        String path =new StringBuffer(dirname)
+                .append("/")
+                .append(key)
+                .append(".")
+                .append(suffix)
+                .append(".")
+                .append(fileDto.getShardIndex()).toString();
         //新文件名称
         String fullPath = FILE_PATH + path;
         File desc = new File(fullPath);
