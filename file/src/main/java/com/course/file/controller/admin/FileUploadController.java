@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import sun.rmi.runtime.Log;
 
 import javax.annotation.Resource;
 import java.io.*;
@@ -52,45 +53,49 @@ public class FileUploadController {
             fullDir.mkdir();
         }
 
-        String path =new StringBuffer(dirname)
+        String path = new StringBuffer(dirname)
                 .append("/")
                 .append(key)
                 .append(".")
                 .append(suffix)
+                .toString();
+        String localPath = new StringBuffer(path)
                 .append(".")
                 .append(fileDto.getShardIndex()).toString();
         //新文件名称
-        String fullPath = FILE_PATH + path;
+        String fullPath = FILE_PATH + localPath;
         File desc = new File(fullPath);
         shard.transferTo(desc);
         LOG.info("上传后的绝对路径:{}", desc.getAbsolutePath());
-
         LOG.info("保存文件记录开始");
-
         fileDto.setPath(path);
         fileService.save(fileDto);
         ResponseDto responseDto = new ResponseDto();
         responseDto.setContent(fileDto);
         fileDto.setPath(FILE_DOMAIN + path);
+        if (fileDto.getShardIndex() == fileDto.getShardTotal()) {
+            this.merge(fileDto);
+        }
         return responseDto;
     }
 
-    @GetMapping("/merge")
-    public ResponseDto merge() throws FileNotFoundException {
-        File newFile = new File(FILE_PATH + "/course/test123.mp4");
+
+    private void merge(FileDto fileDto) throws FileNotFoundException {
+        LOG.info("合并分片开始");
+        Integer shardTotal = fileDto.getShardTotal();
+        String path = fileDto.getPath();
+        path = path.replace(FILE_DOMAIN, "");
+        File newFile = new File(FILE_PATH + path);
         FileOutputStream outputStream = new FileOutputStream(newFile, true);
         FileInputStream inputStream = null;//分片文件
         byte[] byt = new byte[10 * 1024 * 1024];
         int len;
         try {
-            inputStream = new FileInputStream(new File(FILE_PATH + "/course/snMxobRL.blob"));
-            while ((len = inputStream.read(byt)) != -1) {
-                outputStream.write(byt, 0, len);
-            }
-            //读取第二个分片
-            inputStream = new FileInputStream(new File(FILE_PATH + "/course/yEP281ww.blob"));
-            while ((len = inputStream.read(byt)) != -1) {
-                outputStream.write(byt, 0, len);
+            for (int i = 1; i <= shardTotal; i++) {
+                inputStream = new FileInputStream(new File(FILE_PATH + path + "." + i));
+                while ((len = inputStream.read(byt)) != -1) {
+                    outputStream.write(byt, 0, len);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -106,7 +111,18 @@ public class FileUploadController {
                 LOG.error("IO流关闭");
             }
         }
-        ResponseDto responseDto = new ResponseDto();
-        return responseDto;
+        LOG.info("分片合并结束");
+
+        System.gc();
+
+        //删除分片开始
+        LOG.info("删除分片开始");
+        for (int i = 1; i <= shardTotal; i++) {
+            String filePath = FILE_PATH + path + "." + 1;
+            File file = new File(filePath);
+            boolean result = file.delete();
+            LOG.info("删除{},{}", filePath, result ? "成功" : "失败");
+        }
+        LOG.info("删除分片结束");
     }
 }

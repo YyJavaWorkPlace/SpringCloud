@@ -49,7 +49,7 @@ public class FileService {
         if (fileDb==null) {
             this.insert(file);
         } else {
-            fileDb.setShardIndex(fileDto.getShardIndex()+1);
+            fileDb.setShardIndex(fileDto.getShardIndex());
             this.update(fileDb);
         }
     }
