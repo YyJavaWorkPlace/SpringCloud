@@ -69,7 +69,7 @@
                 }
 
                 //文件分片
-                let shardSize = 5 * 1024 * 1024; //以20MB为一个分片
+                let shardSize = 10 * 1024 * 1024; //以20MB为一个分片
                 let shardIndex = 1;//分片索引
                 let size = file.size; //文件大小
                 let shardTotal = Math.ceil(size / shardSize);//总分片数
@@ -93,7 +93,31 @@
                     "size": file.size,
                     "key": key62
                 };
-                _this.upload(param);
+                _this.check(param);
+            },
+            /**
+             * 检查文件上传状态
+             * @param param
+             */
+            check: function (param) {
+                let _this = this;
+                _this.$ajax.get(process.env.VUE_APP_SERVER + 'file/admin/check/' + param.key).then((response) => {
+                    let resp = response.data;
+                    if (response.success) {
+                        let obj = resp.content;
+                        if (!obj) {
+                            param.shardIndex = 1;
+                            _this.upload(param)
+                        } else {
+                            param.shardIndex = obj.shardIndex + 1;
+                            _this.upload(param);
+                        }
+                    } else {
+                        Toast.warning("文件上传失败");
+                        $("#" + _this.inputId + "-input").val("");
+                    }
+
+                })
             },
             upload: function (param) {
                 let _this = this;

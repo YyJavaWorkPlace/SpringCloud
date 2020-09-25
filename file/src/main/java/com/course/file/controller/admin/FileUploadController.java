@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import sun.rmi.runtime.Log;
 
 import javax.annotation.Resource;
+import javax.ws.rs.Path;
 import java.io.*;
 
 /**
@@ -124,5 +125,14 @@ public class FileUploadController {
             LOG.info("删除{},{}", filePath, result ? "成功" : "失败");
         }
         LOG.info("删除分片结束");
+    }
+
+    @GetMapping("/check/{key}")
+    public ResponseDto check(@PathVariable String key) {
+        LOG.info("检查上传分片开始:{}", key);
+        ResponseDto responseDto = new ResponseDto();
+        FileDto fileDto = fileService.findByKey(key);
+        responseDto.setContent(fileDto);
+        return responseDto;
     }
 }
