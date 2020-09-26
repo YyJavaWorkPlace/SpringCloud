@@ -38,7 +38,7 @@ public class FileUploadController {
     private FileService fileService;
 
     @RequestMapping("/upload")
-    public ResponseDto upload(@RequestBody FileDto fileDto) throws IOException {
+    public ResponseDto upload(@RequestBody FileDto fileDto) throws Exception {
         LOG.info("文件上传开始");
         String use = fileDto.getUse();
         String key = fileDto.getKey();
@@ -74,14 +74,14 @@ public class FileUploadController {
         ResponseDto responseDto = new ResponseDto();
         responseDto.setContent(fileDto);
         fileDto.setPath(FILE_DOMAIN + path);
-        if (fileDto.getShardIndex() == fileDto.getShardTotal()) {
+        if (fileDto.getShardIndex().equals(fileDto.getShardTotal())) {
             this.merge(fileDto);
         }
         return responseDto;
     }
 
 
-    private void merge(FileDto fileDto) throws FileNotFoundException {
+    private void merge(FileDto fileDto) throws FileNotFoundException, InterruptedException {
         LOG.info("合并分片开始");
         Integer shardTotal = fileDto.getShardTotal();
         String path = fileDto.getPath();
@@ -115,6 +115,10 @@ public class FileUploadController {
         LOG.info("分片合并结束");
 
         System.gc();
+        /**
+         * 调用GC java不会马上去执行垃圾回收 会先进行手上的工作
+         */
+        Thread.sleep(100);
 
         //删除分片开始
         LOG.info("删除分片开始");
@@ -132,6 +136,9 @@ public class FileUploadController {
         LOG.info("检查上传分片开始:{}", key);
         ResponseDto responseDto = new ResponseDto();
         FileDto fileDto = fileService.findByKey(key);
+        if (fileDto != null) {
+            fileDto.setPath(FILE_DOMAIN + fileDto.getPath());
+        }
         responseDto.setContent(fileDto);
         return responseDto;
     }

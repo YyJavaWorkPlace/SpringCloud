@@ -101,13 +101,17 @@
              */
             check: function (param) {
                 let _this = this;
-                _this.$ajax.get(process.env.VUE_APP_SERVER + 'file/admin/check/' + param.key).then((response) => {
+                _this.$ajax.get(process.env.VUE_APP_SERVER + '/file/admin/check/' + param.key).then((response) => {
                     let resp = response.data;
-                    if (response.success) {
+                    if (resp.success) {
                         let obj = resp.content;
                         if (!obj) {
                             param.shardIndex = 1;
                             _this.upload(param)
+                        } else if (obj.shardIndex === obj.shardTotal) {
+                            Toast.success("文件极速妙传成功");
+                            _this.afterUpload(resp);
+                            $("#" + _this.inputId + "-input").val("");
                         } else {
                             param.shardIndex = obj.shardIndex + 1;
                             _this.upload(param);
@@ -127,18 +131,26 @@
                 let fileShard = _this.getFileShard(shardIndex, shardSize);
                 //将图片转成base64进行传输 先写数据监听
                 let fileReader = new FileReader();
+
+                /**
+                 * 上传文件之前显示进度
+                 */
+                Progress.show(parseInt((shardIndex - 1) * 100 / shardTotal));
+
                 fileReader.onload = function (e) {
                     let base64 = e.target.result;
                     param.shard = base64;
-                    Loading.show();
+
                     _this.$ajax.post(process.env.VUE_APP_SERVER + '/file/admin/upload', param).then((response) => {
-                        Loading.hide();
+
                         let resp = response.data;
+                        Progress.show(parseInt((shardIndex - 1) * 100 / shardTotal));
                         if (shardIndex < shardTotal) {
                             // 上传下一个分片
                             param.shardIndex = param.shardIndex + 1;
                             _this.upload(param);
                         } else {
+                            Progress.hide();
                             _this.afterUpload(resp);
                             $("#" + _this.inputId + "-input").val("");
                         }

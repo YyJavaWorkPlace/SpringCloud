@@ -32,21 +32,21 @@
             </thead>
 
             <tbody>
-            <tr v-for="section in sections" :key="section.id">
-                <td> {{section.id}}</td>
-                <td> {{section.title}}</td>
-                <td> {{section.video}}</td>
-                <td> {{section.time|formatSecond}}</td>
-                <td> {{SECTION_CHARGE | optionArray(section.charge)}}</td>
-                <td> {{section.sort}}</td>
-                <td> {{section.createdAt}}</td>
+            <tr v-for="sect in sects" :key="sect.id">
+                <td> {{sect.id}}</td>
+                <td> {{sect.title}}</td>
+                <td> {{sect.video}}</td>
+                <td> {{sect.time|formatSecond}}</td>
+                <td> {{SECTION_CHARGE | optionArray(sect.charge)}}</td>
+                <td> {{sect.sort}}</td>
+                <td> {{sect.createdAt}}</td>
 
                 <td>
                     <div class="hidden-sm hidden-xs btn-group">
-                        <button v-on:click="edit(section)" class="btn btn-xs btn-info">
+                        <button v-on:click="edit(sect)" class="btn btn-xs btn-info">
                             <i class="ace-icon fa fa-pencil bigger-120"></i>
                         </button>
-                        <button v-on:click="del(section.id)" class="btn btn-xs btn-danger">
+                        <button v-on:click="del(sect.id)" class="btn btn-xs btn-danger">
                             <i class="ace-icon fa fa-trash-o bigger-120"></i>
                         </button>
                     </div>
@@ -66,7 +66,7 @@
                         <form>
                             <div class="form-group">
                                 <label>标题</label>
-                                <input v-model="section.title" type="text" class="form-control">
+                                <input v-model="sect.title" type="text" class="form-control">
                             </div>
                             <div class="form-group">
                                 <label>课程</label>
@@ -79,30 +79,30 @@
                             <div class="form-group">
                                 <label>视频</label>
                                 <BigFile v-bind:input-id="'video-upload'"
-                                      v-bind:text="'上传大视频'"
-                                      v-bind:after-upload="afterUpload"
-                                      v-bind:suffixs="['mp4']"
-                                      v-bind:use="FILE_USE[0].key"></BigFile>
-                                <div v-show="section.video" class="row">
+                                         v-bind:text="'上传大视频'"
+                                         v-bind:after-upload="afterUpload"
+                                         v-bind:suffixs="['mp4']"
+                                         v-bind:use="FILE_USE[0].key"></BigFile>
+                                <div v-show="sect.video" class="row">
                                     <div class="col-md-9">
-                                        <video id="video" v-bind:src="section.video" controls="controls"></video>
+                                        <video id="video" v-bind:src="sect.video" controls="controls"></video>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label>时长</label>
-                                <input v-model="section.time" type="text" class="form-control">
+                                <input v-model="sect.time" type="text" class="form-control">
                             </div>
                             <div class="form-group">
                                 <label>收费</label>
-                                <select v-model="section.charge" class="form-control">
+                                <select v-model="sect.charge" class="form-control">
                                     <option v-for="o in SECTION_CHARGE" :key="o.num" v-bind:value="o.key">{{o.value}}
                                     </option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label>顺序</label>
-                                <input v-model="section.sort" type="text" class="form-control">
+                                <input v-model="sect.sort" type="text" class="form-control">
                             </div>
                         </form>
                     </div>
@@ -120,13 +120,13 @@
     import BigFile from "../../components/big-file";
 
     export default {
-        name: "section",
+        name: "sect",
         components: {BigFile, Pagination},
         data: function () {
             // 不使用return包裹的数据会在项目的全局可见，会造成变量污染；使用return包裹后数据中变量只在当前组件中生效，不会影响其他组件.
             return {
-                section: {},
-                sections: [],
+                sect: {},
+                sects: [],
                 SECTION_CHARGE: SECTION_CHARGE,
                 FILE_USE: FILE_USE,
                 chapter: {},
@@ -158,34 +158,34 @@
                 }).then((response) => {
                     Loading.hide();
                     let resp = response.data;
-                    _this.sections = resp.content.list;
+                    _this.sects = resp.content.list;
                     _this.$refs.pagination.render(page, resp.content.total);
                 })
             },
             add() {
                 let _this = this;
-                _this.section = {};
+                _this.sect = {};
                 $("#form-model").modal("show");
             },
-            edit(section) {
+            edit(sect) {
                 let _this = this;
-                //修改的内容不会影响到原section 所以点击取消后数据不会发生更改
-                _this.section = $.extend({}, section);
+                //修改的内容不会影响到原sect 所以点击取消后数据不会发生更改
+                _this.sect = $.extend({}, sect);
                 $("#form-model").modal("show");
             },
             save() {
                 let _this = this;
                 if (1 != 1
-                    || !Validator.require(_this.section.title, "标题")
-                    || !Validator.length(_this.section.title, "标题", 1, "50")
-                    || !Validator.length(_this.section.video, "视频地址", 1, "200")
+                    || !Validator.require(_this.sect.title, "标题")
+                    || !Validator.length(_this.sect.title, "标题", 1, "50")
+                    || !Validator.length(_this.sect.video, "视频地址", 1, "200")
                 ) {
                     return;
                 }
-                _this.section.courseId = _this.course.id;
-                _this.section.chapterId = _this.chapter.id;
+                _this.sect.courseId = _this.course.id;
+                _this.sect.chapterId = _this.chapter.id;
                 Loading.show();
-                _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/section/save', _this.section
+                _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/section/save', _this.sect
                 ).then((response) => {
                     Loading.hide();
                     let resp = response.data;
@@ -215,7 +215,7 @@
             afterUpload(resp) {
                 let _this = this;
                 let video = resp.content.path;
-                _this.section.video = video;
+                _this.sect.video = video;
                 _this.getTime();
             },
             /**
@@ -224,7 +224,7 @@
             getTime() {
                 let _this = this;
                 let ele = document.getElementById("video");
-                _this.section.time = parseInt(ele.duration, 10);
+                _this.sect.time = parseInt(ele.duration, 10);
             }
         }
     }
